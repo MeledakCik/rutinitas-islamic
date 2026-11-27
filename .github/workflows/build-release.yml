@@ -89,9 +89,12 @@ jobs:
 
       - name: Periksa tanda tangan rilis
         run: |
-          jarsigner -verify "dist/Rutinitas-${{ steps.version.outputs.tag }}.aab" | grep -q "jar verified"
+          out="dist/Rutinitas-${{ steps.version.outputs.tag }}"
+          aab=$(jarsigner -verify "$out.aab" 2>&1 || true)
+          echo "AAB: $(echo "$aab" | grep -m1 -E 'verified|unsigned|error' || echo "$aab" | tail -1)"
+          if ! echo "$aab" | grep -q "jar verified"; then echo "::error::AAB tidak bertanda tangan"; echo "$aab"; exit 1; fi
           apksigner=$(ls -d "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
-          "$apksigner" verify --print-certs "dist/Rutinitas-${{ steps.version.outputs.tag }}.apk" | grep -q "Signer #1"
+          "$apksigner" verify --print-certs "$out.apk" | grep -E "Signer #1 certificate (DN|SHA-256)" || { echo "::error::APK tidak bertanda tangan"; exit 1; }
 
       - name: Hapus kunci dari runner
         if: always()
