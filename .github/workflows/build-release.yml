@@ -105,8 +105,10 @@ jobs:
           if ! echo "$aab" | grep -q "jar verified"; then echo "::error::AAB tidak bertanda tangan"; echo "$aab"; exit 1; fi
           echo "AAB: jar verified"
           apksigner=$(ls -d "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
-          "$apksigner" verify --print-certs "$out.apk" | grep -E "Signer #1 certificate (DN|SHA-256)" \
+          certs=$("$apksigner" verify --print-certs "$out.apk" 2>/dev/null) \
             || { echo "::error::APK tidak bertanda tangan"; exit 1; }
+          echo "$certs" | grep -E "certificate (DN|SHA-256 digest)" \
+            || { echo "::error::Sertifikat APK tidak terbaca"; exit 1; }
 
       - name: Hapus kunci dari runner
         if: always()
