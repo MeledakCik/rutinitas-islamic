@@ -47,6 +47,8 @@ jobs:
           name=$(grep -oP "versionName\s+'\K[^']+" app/build.gradle)
           echo "name=$name" >> "$GITHUB_OUTPUT"
           echo "tag=v$name-build.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+          base=$(grep -oP "versionCodeOverride'\) \?: '\K[0-9]+" app/build.gradle)
+          echo "code=$((base + ${{ github.run_number }}))" >> "$GITHUB_OUTPUT"
 
       - name: Tes regresi
         run: |
@@ -77,24 +79,27 @@ jobs:
             echo "::warning::Secret KEYSTORE_BASE64 belum diisi; yang dibuat APK debug."
           fi
 
-      - name: Unit test & build APK
+      - name: Unit test & build APK/AAB
         run: |
           chmod +x gradlew
-          if [ "${{ steps.signing.outputs.signed }}" = "true" ]; then
-            ./gradlew --no-daemon :app:testDebugUnitTest :app:assembleRelease
-            src=app/build/outputs/apk/release/app-release.apk
-          else
-            ./gradlew --no-daemon :app:testDebugUnitTest :app:assembleDebug
-            src=app/build/outputs/apk/debug/app-debug.apk
-          fi
+          out="dist/Rutinitas-${{ steps.version.outputs.tag }}"
           mkdir -p dist
-          cp "$src" "dist/Rutinitas-${{ steps.version.outputs.tag }}.apk"
+          code="-PversionCodeOverride=${{ steps.version.outputs.code }}"
+          if [ "${{ steps.signing.outputs.signed }}" = "true" ]; then
+            ./gradlew --no-daemon "$code" :app:testDebugUnitTest :app:assembleRelease :app:bundleRelease
+            cp app/build/outputs/apk/release/app-release.apk "$out.apk"
+            cp app/build/outputs/bundle/release/app-release.aab "$out.aab"
+          else
+            ./gradlew --no-daemon "$code" :app:testDebugUnitTest :app:assembleDebug
+            cp app/build/outputs/apk/debug/app-debug.apk "$out-debug.apk"
+          fi
+          rm -f keystore.properties
 
-      - name: Simpan APK sebagai artifact
+      - name: Simpan hasil build sebagai artifact
         uses: actions/upload-artifact@v4
         with:
           name: Rutinitas-${{ steps.version.outputs.tag }}
-          path: dist/*.apk
+          path: dist/*
 
       - name: Terbitkan ke Releases
         if: github.ref == 'refs/heads/main'
@@ -104,9 +109,9 @@ jobs:
           target_commitish: ${{ github.sha }}
           name: Rutinitas ${{ steps.version.outputs.name }} (build ${{ github.run_number }})
           body: |
-            Build otomatis dari commit ${{ github.sha }}.
-            ${{ steps.signing.outputs.signed == 'true' && 'APK rilis bertanda tangan upload key.' || 'APK debug (belum bertanda tangan rilis).' }}
+            Build otomatis dari commit ${{ github.sha }} · versionCode ${{ steps.version.outputs.code }}.
+            ${{ steps.signing.outputs.signed == 'true' && 'AAB (untuk Play Console) dan APK rilis bertanda tangan upload key.' || 'APK debug: secret kunci belum diisi, belum bisa diunggah ke Play Store.' }}
 
             ${{ github.event.head_commit.message }}
-          files: dist/*.apk
+          files: dist/*
           generate_release_notes: false
