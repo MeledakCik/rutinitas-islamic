@@ -3,6 +3,11 @@
 Semua perubahan penting pada aplikasi Rutinitas dicatat di sini.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/), dan penomoran versi mengikuti [Semantic Versioning](https://semver.org/lang/id/).
 
+## [1.3.3]
+
+### Diperbaiki
+- **Tasbih**: angka hitungan dan target kini berada tepat di tengah lingkaran, tidak lagi menempel di sisi kiri.
+
 ## [1.3.2]
 
 ### Diperbaiki

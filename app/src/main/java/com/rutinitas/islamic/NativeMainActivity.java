@@ -1966,9 +1966,13 @@ public final class NativeMainActivity extends Activity {
         tapCircle.setFocusable(true);
         dzikirCountView = text("0", 56, colorOnAccent(), true);
         dzikirCountView.setTypeface(monoTypeface(), Typeface.BOLD);
-        tapCircle.addView(dzikirCountView);
+        dzikirCountView.setGravity(Gravity.CENTER);
+        dzikirCountView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        tapCircle.addView(dzikirCountView, new LinearLayout.LayoutParams(MATCH, WRAP));
         dzikirTargetView = text("", 14, withAlpha(colorOnAccent(), 210), false);
-        tapCircle.addView(dzikirTargetView);
+        dzikirTargetView.setGravity(Gravity.CENTER);
+        dzikirTargetView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        tapCircle.addView(dzikirTargetView, new LinearLayout.LayoutParams(MATCH, WRAP));
         tapCircle.setOnClickListener(view -> {
             int event = NativeDzikir.tapAndSave(this);
             if (event == NativeDzikir.EVENT_TARGET_REACHED) toast("Target tercapai. Ketuk lagi untuk lanjut.");
@@ -1976,7 +1980,9 @@ public final class NativeMainActivity extends Activity {
             view.setContentDescription(dzikirCountView.getText() + " " + dzikirTargetView.getText());
         });
         pressScale(tapCircle);
-        counterCard.addView(tapCircle, new LinearLayout.LayoutParams(dp(220), dp(220)));
+        LinearLayout.LayoutParams circleParams = new LinearLayout.LayoutParams(dp(220), dp(220));
+        circleParams.gravity = Gravity.CENTER_HORIZONTAL;
+        counterCard.addView(tapCircle, circleParams);
         addGap(counterCard, 16);
 
         dzikirProgress = new android.widget.ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
