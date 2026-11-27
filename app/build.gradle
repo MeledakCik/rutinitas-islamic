@@ -20,7 +20,7 @@ android {
         targetSdk 36
         // CI menaikkan versionCode otomatis lewat -PversionCodeOverride agar tiap build bisa diunggah ke Play.
         versionCode((project.findProperty('versionCodeOverride') ?: '24') as int)
-        versionName '1.2.1'
+        versionName '1.2.2'
     }
 
     compileOptions {

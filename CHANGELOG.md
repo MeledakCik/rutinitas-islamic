@@ -3,7 +3,7 @@
 Semua perubahan penting pada aplikasi Rutinitas dicatat di sini.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/), dan penomoran versi mengikuti [Semantic Versioning](https://semver.org/lang/id/).
 
-## [1.2.1]
+## [1.2.2]
 
 ### Ditambahkan
 - **Hafalan**: tombol *− 1 hari / + 1 hari* di pengaturan target Sabaq untuk menggeser posisi sebanyak satu porsi harian (misalnya hal. 8 baris 13–15 → hal. 9 baris 1–4 pada mode ¼ halaman). Berguna untuk menyamakan posisi aplikasi dengan hafalan setelah baru menginstal.
