@@ -1,10 +1,14 @@
-name: Build & Release APK
+name: Build & Release
+
+# Setiap push ke main: tes, build rilis bertanda tangan (AAB + APK), lalu perbarui
+# draft Release untuk versi di app/build.gradle. Publikasikan draft secara manual
+# setelah APK dicek. Branch lain hanya membangun dan menyimpan artifact.
 
 on:
   push:
     branches: ['**']
     paths-ignore:
-      - '**.md'
+      - 'README.md'
       - 'play-store/**'
   workflow_dispatch:
 
@@ -17,6 +21,7 @@ concurrency:
 
 jobs:
   build:
+    name: Build rilis
     runs-on: ubuntu-latest
     env:
       TZ: Asia/Jakarta
@@ -45,10 +50,12 @@ jobs:
         id: version
         run: |
           name=$(grep -oP "versionName\s+'\K[^']+" app/build.gradle)
-          echo "name=$name" >> "$GITHUB_OUTPUT"
-          echo "tag=v$name-build.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
           base=$(grep -oP "versionCodeOverride'\) \?: '\K[0-9]+" app/build.gradle)
-          echo "code=$((base + ${{ github.run_number }}))" >> "$GITHUB_OUTPUT"
+          code=$((base + ${{ github.run_number }}))
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          echo "tag=v$name" >> "$GITHUB_OUTPUT"
+          echo "Versi $name · versionCode $code"
 
       - name: Tes regresi
         run: |
@@ -66,7 +73,7 @@ jobs:
         run: |
           for name in KEYSTORE_BASE64 KEYSTORE_PASSWORD KEY_ALIAS KEY_PASSWORD; do
             if [ -z "${!name}" ]; then
-              echo "::error::Secret $name belum diisi di Settings > Secrets and variables > Actions. Build rilis butuh upload key."
+              echo "::error::Secret $name belum diisi di Settings > Secrets and variables > Actions."
               exit 1
             fi
           done
@@ -81,20 +88,25 @@ jobs:
       - name: Unit test & build rilis (AAB + APK)
         run: |
           chmod +x gradlew
-          out="dist/Rutinitas-${{ steps.version.outputs.tag }}"
+          ./gradlew --no-daemon "-PversionCodeOverride=${{ steps.version.outputs.code }}" \
+            :app:testDebugUnitTest :app:assembleRelease :app:bundleRelease
+          out="dist/Rutinitas-${{ steps.version.outputs.name }}"
           mkdir -p dist
-          ./gradlew --no-daemon "-PversionCodeOverride=${{ steps.version.outputs.code }}"             :app:testDebugUnitTest :app:assembleRelease :app:bundleRelease
-          cp app/build/outputs/apk/release/app-release.apk "$out.apk"
           cp app/build/outputs/bundle/release/app-release.aab "$out.aab"
+          cp app/build/outputs/apk/release/app-release.apk "$out.apk"
+          (cd dist && sha256sum Rutinitas-* > SHA256SUMS.txt)
+          mkdir -p mapping
+          cp app/build/outputs/mapping/release/mapping.txt mapping/ 2>/dev/null || true
 
       - name: Periksa tanda tangan rilis
         run: |
-          out="dist/Rutinitas-${{ steps.version.outputs.tag }}"
+          out="dist/Rutinitas-${{ steps.version.outputs.name }}"
           aab=$(jarsigner -verify "$out.aab" 2>&1 || true)
-          echo "AAB: $(echo "$aab" | grep -m1 -E 'verified|unsigned|error' || echo "$aab" | tail -1)"
           if ! echo "$aab" | grep -q "jar verified"; then echo "::error::AAB tidak bertanda tangan"; echo "$aab"; exit 1; fi
+          echo "AAB: jar verified"
           apksigner=$(ls -d "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
-          "$apksigner" verify --print-certs "$out.apk" | grep -E "Signer #1 certificate (DN|SHA-256)" || { echo "::error::APK tidak bertanda tangan"; exit 1; }
+          "$apksigner" verify --print-certs "$out.apk" | grep -E "Signer #1 certificate (DN|SHA-256)" \
+            || { echo "::error::APK tidak bertanda tangan"; exit 1; }
 
       - name: Hapus kunci dari runner
         if: always()
@@ -103,24 +115,65 @@ jobs:
       - name: Simpan hasil build sebagai artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Rutinitas-${{ steps.version.outputs.tag }}
-          path: dist/*
+          name: Rutinitas-${{ steps.version.outputs.name }}-build.${{ github.run_number }}
+          path: |
+            dist/*
+            mapping/*
 
-      - name: Terbitkan ke Releases
+      - name: Susun catatan rilis
         if: github.ref == 'refs/heads/main'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.version.outputs.tag }}
-          target_commitish: ${{ github.sha }}
-          name: Rutinitas ${{ steps.version.outputs.name }} (build ${{ github.run_number }})
-          draft: true
-          body: |
-            Build rilis otomatis dari commit ${{ github.sha }} · versionCode ${{ steps.version.outputs.code }}.
-            - `.aab`: unggah ke Play Console.
-            - `.apk`: build rilis yang sama untuk dicoba di HP sebelum publish.
+        run: |
+          version="${{ steps.version.outputs.name }}"
+          changes=$(awk -v v="$version" '
+            index($0, "## [" v "]") == 1 { found=1; next }
+            found && /^## \[/ { exit }
+            found { print }' CHANGELOG.md)
+          if [ -z "$(echo "$changes" | tr -d '[:space:]')" ]; then
+            echo "::warning::CHANGELOG.md belum punya bagian [$version]."
+            changes="Lihat riwayat commit untuk daftar perubahan."
+          fi
+          {
+            echo "$changes" | sed '/./,$!d'
+            echo
+            echo "---"
+            echo
+            echo "### Unduhan"
+            echo
+            echo "| File | Kegunaan |"
+            echo "| --- | --- |"
+            echo "| \`Rutinitas-$version.aab\` | Unggah ke Google Play Console |"
+            echo "| \`Rutinitas-$version.apk\` | Pasang langsung di Android 7.0 atau lebih baru |"
+            echo "| \`SHA256SUMS.txt\` | Checksum untuk memeriksa keaslian file |"
+            echo
+            echo "**Versi** $version · **versionCode** ${{ steps.version.outputs.code }} · **Commit** \`${GITHUB_SHA::7}\`"
+          } > release-notes.md
+          cat release-notes.md
 
-            Draft: cek dulu APK-nya, lalu klik Publish release bila sudah oke.
-
-            ${{ github.event.head_commit.message }}
-          files: dist/*
-          generate_release_notes: false
+      - name: Perbarui draft Release
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${{ steps.version.outputs.tag }}"
+          title="Rutinitas ${{ steps.version.outputs.name }}"
+          files=(dist/Rutinitas-* dist/SHA256SUMS.txt)
+          state=$(gh release list --limit 100 --json tagName,isDraft \
+            -q ".[] | select(.tagName == \"$tag\") | if .isDraft then \"draft\" else \"published\" end")
+          case "$state" in
+            published)
+              echo "::warning::$tag sudah dipublikasikan dan tidak ditimpa. Naikkan versionName di app/build.gradle dan tambah bagian baru di CHANGELOG.md untuk rilis berikutnya."
+              ;;
+            draft)
+              for asset in $(gh release view "$tag" --json assets -q '.assets[].name'); do
+                gh release delete-asset "$tag" "$asset" --yes
+              done
+              gh release upload "$tag" "${files[@]}"
+              gh release edit "$tag" --title "$title" --notes-file release-notes.md --target "$GITHUB_SHA" --draft
+              echo "Draft $tag diperbarui."
+              ;;
+            *)
+              gh release create "$tag" "${files[@]}" --draft --title "$title" \
+                --notes-file release-notes.md --target "$GITHUB_SHA"
+              echo "Draft $tag dibuat."
+              ;;
+          esac
