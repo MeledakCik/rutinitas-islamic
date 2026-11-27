@@ -1,0 +1,33 @@
+Rutinitas — Sumber konten dan lisensi
+=====================================
+
+Teks Al-Qur'an (Arab)
+  Tanzil Quran Text (Uthmani, v1.1), Tanzil Project — https://tanzil.net/
+  Lisensi: Creative Commons Attribution 3.0, teks disalin verbatim tanpa perubahan.
+  Ketentuan lengkap: TANZIL-LICENSE.txt
+
+Nama Latin surah
+  Transliterasi Kementerian Agama RI (quran.kemenag.go.id), tanpa tanda diakritik.
+
+Terjemahan Indonesia (diunduh atas permintaan pengguna)
+  EQuran.id — https://equran.id/ (terjemahan Kementerian Agama RI)
+
+Murattal dan data waktu ayat (diputar/diunduh atas permintaan pengguna)
+  MP3Quran.net — https://mp3quran.net/
+  Qari: Yasser Al-Dosari, Mishary Rashid Alafasy.
+
+Suara adzan bawaan
+  Rekaman adzan Masjidil Haram, Makkah ("Adzan Mekkah Versi 1"), diperoleh dari islamiques.net.
+  Hak cipta rekaman tetap milik muadzin, Masjidil Haram, dan/atau pemegang hak terkait.
+  Keterangan lisensi tidak dicantumkan oleh sumber. Rekaman tidak diubah selain menghapus metadata.
+  Pemegang hak yang keberatan dapat menghubungi depupdev@gmail.com; rekaman akan segera dihapus atau diganti.
+
+Jadwal shalat
+  Dihitung di perangkat dengan kriteria Kemenag RI (Subuh -20°, Isya -18°, Ashar Syafi'i),
+  dicocokkan dengan jadwal Bimas Islam Kemenag RI.
+
+Huruf
+  Amiri Quran — Khaled Hosny dkk., SIL Open Font License 1.1 (fonts/AmiriQuran-OFL.txt)
+  Inter — Rasmus Andersson, SIL Open Font License 1.1 (fonts/Inter-OFL.txt)
+
+Kontak pengembang: depupdev@gmail.com

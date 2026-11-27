@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f8f9fb">
+  <title>Kebijakan Privasi Rutinitas</title>
+  <style>
+    :root{color-scheme:light;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#111827;background:#f8f9fb}
+    body{max-width:720px;margin:0 auto;padding:32px 20px 56px;line-height:1.65}
+    h1{font-size:1.8rem;line-height:1.2}h2{font-size:1.1rem;margin-top:2rem}
+    p,li,td{color:#475467}a{color:#1652f6}small{color:#667085}
+    table{border-collapse:collapse;width:100%;font-size:.95rem}td,th{border-top:1px solid #e4e7ec;padding:8px 6px;text-align:left;vertical-align:top}th{color:#111827}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Kebijakan Privasi Rutinitas</h1>
+    <small>Berlaku sejak 27 November 2026 · menggantikan versi 24 November 2026</small>
+    <p>Kebijakan ini menjelaskan data apa yang diakses aplikasi Rutinitas (paket <code>com.rutinitas.islamic</code>), untuk apa, dan ke mana data itu pergi. Rutinitas dirancang agar data Anda tetap di perangkat: tidak ada akun, iklan, analitik, pelacakan, atau server milik pengembang.</p>
+
+    <h2>Data yang disimpan di perangkat</h2>
+    <p>Jadwal rutinitas, progres dan target hafalan, penanda serta posisi terakhir membaca Al-Qur'an, preferensi tampilan, pilihan pengingat adzan, dan koordinat yang Anda pilih disimpan di penyimpanan privat aplikasi. Data ini tidak dikirim ke pengembang atau pihak lain. Anda dapat mengekspor cadangan JSON ke lokasi yang Anda pilih dan mengimpornya kembali.</p>
+
+    <h2>Lokasi</h2>
+    <p>Jika Anda memilih sumber waktu salat "Lokasi GPS", Rutinitas meminta izin lokasi perkiraan saat aplikasi digunakan. Lokasi dipakai di perangkat untuk menghitung waktu salat dan disimpan sebagai koordinat di penyimpanan privat. Aplikasi tidak meminta lokasi latar belakang dan tidak mengirim koordinat ke internet. Layanan lokasi Android dapat memproses informasi lokasi sesuai setelan dan kebijakan perangkat Anda. Anda juga dapat memasukkan koordinat secara manual tanpa memberi izin lokasi.</p>
+
+    <h2>Notifikasi dan pengingat adzan</h2>
+    <p>Rutinitas menampilkan notifikasi saat masuk waktu Subuh, Dzuhur, Ashar, Maghrib, dan Isya (dapat diatur per waktu atau dimatikan), serta ringkasan rutinitas di layar kunci jika Anda mengaktifkannya. Waktu dihitung di perangkat. Untuk itu aplikasi memakai izin berikut; semuanya bekerja secara lokal dan tidak mengirim data:</p>
+    <table>
+      <tr><th>Izin</th><th>Kegunaan</th></tr>
+      <tr><td>Notifikasi</td><td>Menampilkan pengingat adzan dan ringkasan rutinitas.</td></tr>
+      <tr><td>Alarm &amp; pengingat (alarm tepat waktu)</td><td>Agar pengingat muncul tepat saat waktu salat. Opsional; tanpa izin ini pengingat tetap berjalan tetapi bisa terlambat beberapa menit.</td></tr>
+      <tr><td>Berjalan saat perangkat dinyalakan</td><td>Menjadwalkan ulang pengingat setelah perangkat dinyalakan ulang, jam/zona waktu diubah, atau aplikasi diperbarui.</td></tr>
+      <tr><td>Layanan latar depan (pemutaran media)</td><td>Memutar suara adzan atau nada alarm saat masuk waktu salat, dengan tombol Matikan di notifikasi.</td></tr>
+      <tr><td>File audio pilihan Anda</td><td>Rekaman adzan yang Anda pilih dibaca langsung dari penyimpanan HP untuk diputar; file tidak disalin atau dikirim ke mana pun.</td></tr>
+      <tr><td>Getar</td><td>Getaran untuk pengingat dan alarm timer.</td></tr>
+      <tr><td>Lokasi perkiraan</td><td>Hanya jika Anda memilih sumber waktu GPS (lihat di atas).</td></tr>
+      <tr><td>Internet</td><td>Hanya untuk permintaan yang Anda mulai (lihat bagian berikut).</td></tr>
+    </table>
+
+    <h2>Koneksi internet dan pihak ketiga</h2>
+    <p>Teks Al-Qur'an tersedia offline. Aplikasi terhubung ke internet hanya ketika Anda:</p>
+    <ul>
+      <li>memutar atau mengunduh murattal, atau memakai sorotan/gulir otomatis ayat, yang mengambil audio dan data waktu ayat dari <a href="https://mp3quran.net/eng/privacy">MP3Quran.net</a>;</li>
+      <li>mengunduh terjemahan Indonesia dari <a href="https://equran.id/terms">EQuran.id</a>;</li>
+      <li>membuka tautan sumber (Tanzil, MP3Quran, EQuran) di peramban.</li>
+    </ul>
+    <p>Permintaan tersebut hanya memuat nomor surah, nama qari/rekaman, dan informasi jaringan standar seperti alamat IP yang otomatis diterima server. Rutinitas tidak mengirim jadwal, hafalan, penanda, lokasi, atau data pribadi lain kepada layanan tersebut, dan tidak menjual atau membagikan data kepada pihak mana pun.</p>
+
+    <h2>Keamanan, retensi, dan penghapusan</h2>
+    <p>Data, murattal yang diunduh, data waktu ayat, dan terjemahan tersimpan di ruang privat Android yang tidak dapat dibaca aplikasi lain, dan tidak ikut dicadangkan otomatis ke cloud. Data disimpan sampai Anda menghapusnya. Hapus unduhan audio lewat tombol "Hapus offline" di panel murattal. Untuk menghapus seluruh data, buka Setelan Android → Aplikasi → Rutinitas → Penyimpanan → Hapus data, atau copot aplikasi. File cadangan yang telah Anda ekspor perlu dihapus sendiri dari lokasi penyimpanannya.</p>
+
+    <h2>Sumber konten dan lisensi</h2>
+    <p>Konten berikut berasal dari pihak lain. Pihak-pihak ini tidak menerima data pribadi Anda dari Rutinitas, kecuali permintaan konten yang Anda mulai seperti dijelaskan di atas.</p>
+    <ul>
+      <li><strong>Teks Al-Qur'an</strong>: <a href="https://tanzil.net/">Tanzil Project</a>, Tanzil Quran Text (Uthmani, v1.1), Creative Commons Attribution 3.0; disalin tanpa perubahan dan disimpan di aplikasi.</li>
+      <li><strong>Nama Latin surah</strong>: transliterasi Kementerian Agama RI.</li>
+      <li><strong>Terjemahan Indonesia</strong>: <a href="https://equran.id/">EQuran.id</a> (terjemahan Kementerian Agama RI), diunduh hanya bila Anda memintanya.</li>
+      <li><strong>Murattal dan data waktu ayat</strong>: <a href="https://mp3quran.net/">MP3Quran.net</a> (qari Yasser Al-Dosari dan Mishary Rashid Alafasy), diputar atau diunduh hanya bila Anda memintanya.</li>
+      <li><strong>Suara adzan bawaan</strong>: rekaman adzan Masjidil Haram, Makkah, diperoleh dari <a href="https://islamiques.net/">islamiques.net</a> dan disimpan di aplikasi untuk diputar offline. Hak cipta rekaman tetap milik muadzin, Masjidil Haram, dan/atau pemegang hak terkait; sumber tidak mencantumkan lisensi. Pemegang hak yang keberatan dapat menghubungi kami melalui kontak di bawah, dan rekaman akan segera dihapus atau diganti. Anda juga dapat memakai file adzan sendiri; file tersebut hanya dibaca di perangkat Anda.</li>
+      <li><strong>Jadwal salat</strong>: dihitung di perangkat dengan kriteria Kementerian Agama RI dan dicocokkan dengan jadwal Bimas Islam Kemenag RI.</li>
+      <li><strong>Huruf</strong>: Amiri Quran (Khaled Hosny dkk.) dan Inter (Rasmus Andersson), SIL Open Font License 1.1.</li>
+    </ul>
+
+    <h2>Anak-anak</h2>
+    <p>Rutinitas tidak secara sengaja mengumpulkan data pribadi dari siapa pun, termasuk anak-anak, karena data tidak meninggalkan perangkat kecuali permintaan konten yang dijelaskan di atas.</p>
+
+    <h2>Perubahan kebijakan</h2>
+    <p>Jika kebijakan ini berubah, versi terbaru akan dipublikasikan di halaman ini dengan tanggal berlaku yang diperbarui.</p>
+
+    <h2>Kontak</h2>
+    <p>Pertanyaan atau permintaan terkait privasi: <a href="mailto:depupdev@gmail.com">depupdev@gmail.com</a>. Alamat yang sama juga tercantum di halaman Google Play aplikasi Rutinitas.</p>
+  </main>
+</body>
+</html>

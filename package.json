@@ -1,0 +1,10 @@
+{
+  "name": "rutinitas-android",
+  "private": true,
+  "scripts": {
+    "test:legacy": "node tests/test_harness.js app/src/main/assets/Rutinitas.html",
+    "test:quran": "node tests/test_quran_reader.js",
+    "test:lockscreen": "node tests/test_lockscreen_preview.js",
+    "test:names": "node tests/test_surah_names.js"
+  }
+}

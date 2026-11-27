@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Diskala ke dalam zona aman adaptive icon (lingkaran 66dp) agar tidak terpotong masker launcher. -->
+    <group
+        android:scaleX="0.68"
+        android:scaleY="0.68"
+        android:translateX="17.28"
+        android:translateY="15.78">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M17,34.5C28,29.5 40,31.5 54,40C68,31.5 80,29.5 91,34.5V77C77.5,71.8 65,74 54,84C43,74 30.5,71.8 17,77V34.5Z" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#1652F6"
+        android:strokeWidth="3.2"
+        android:strokeLineCap="round"
+        android:pathData="M54,41V80M24.5,46L43.5,51.2M24.5,57L43.5,62.2M64.5,51.2L83.5,46M64.5,62.2L83.5,57" />
+    </group>
+</vector>

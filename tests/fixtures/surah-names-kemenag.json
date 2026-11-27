@@ -1,0 +1,572 @@
+[
+ {
+  "number": 1,
+  "latin": "Al-Fatihah",
+  "ayahs": 7
+ },
+ {
+  "number": 2,
+  "latin": "Al-Baqarah",
+  "ayahs": 286
+ },
+ {
+  "number": 3,
+  "latin": "Ali 'Imran",
+  "ayahs": 200
+ },
+ {
+  "number": 4,
+  "latin": "An-Nisa'",
+  "ayahs": 176
+ },
+ {
+  "number": 5,
+  "latin": "Al-Ma'idah",
+  "ayahs": 120
+ },
+ {
+  "number": 6,
+  "latin": "Al-An'am",
+  "ayahs": 165
+ },
+ {
+  "number": 7,
+  "latin": "Al-A'raf",
+  "ayahs": 206
+ },
+ {
+  "number": 8,
+  "latin": "Al-Anfal",
+  "ayahs": 75
+ },
+ {
+  "number": 9,
+  "latin": "At-Taubah",
+  "ayahs": 129
+ },
+ {
+  "number": 10,
+  "latin": "Yunus",
+  "ayahs": 109
+ },
+ {
+  "number": 11,
+  "latin": "Hud",
+  "ayahs": 123
+ },
+ {
+  "number": 12,
+  "latin": "Yusuf",
+  "ayahs": 111
+ },
+ {
+  "number": 13,
+  "latin": "Ar-Ra'd",
+  "ayahs": 43
+ },
+ {
+  "number": 14,
+  "latin": "Ibrahim",
+  "ayahs": 52
+ },
+ {
+  "number": 15,
+  "latin": "Al-Hijr",
+  "ayahs": 99
+ },
+ {
+  "number": 16,
+  "latin": "An-Nahl",
+  "ayahs": 128
+ },
+ {
+  "number": 17,
+  "latin": "Al-Isra'",
+  "ayahs": 111
+ },
+ {
+  "number": 18,
+  "latin": "Al-Kahf",
+  "ayahs": 110
+ },
+ {
+  "number": 19,
+  "latin": "Maryam",
+  "ayahs": 98
+ },
+ {
+  "number": 20,
+  "latin": "Taha",
+  "ayahs": 135
+ },
+ {
+  "number": 21,
+  "latin": "Al-Anbiya'",
+  "ayahs": 112
+ },
+ {
+  "number": 22,
+  "latin": "Al-Hajj",
+  "ayahs": 78
+ },
+ {
+  "number": 23,
+  "latin": "Al-Mu'minun",
+  "ayahs": 118
+ },
+ {
+  "number": 24,
+  "latin": "An-Nur",
+  "ayahs": 64
+ },
+ {
+  "number": 25,
+  "latin": "Al-Furqan",
+  "ayahs": 77
+ },
+ {
+  "number": 26,
+  "latin": "Asy-Syu'ara'",
+  "ayahs": 227
+ },
+ {
+  "number": 27,
+  "latin": "An-Naml",
+  "ayahs": 93
+ },
+ {
+  "number": 28,
+  "latin": "Al-Qasas",
+  "ayahs": 88
+ },
+ {
+  "number": 29,
+  "latin": "Al-'Ankabut",
+  "ayahs": 69
+ },
+ {
+  "number": 30,
+  "latin": "Ar-Rum",
+  "ayahs": 60
+ },
+ {
+  "number": 31,
+  "latin": "Luqman",
+  "ayahs": 34
+ },
+ {
+  "number": 32,
+  "latin": "As-Sajdah",
+  "ayahs": 30
+ },
+ {
+  "number": 33,
+  "latin": "Al-Ahzab",
+  "ayahs": 73
+ },
+ {
+  "number": 34,
+  "latin": "Saba'",
+  "ayahs": 54
+ },
+ {
+  "number": 35,
+  "latin": "Fatir",
+  "ayahs": 45
+ },
+ {
+  "number": 36,
+  "latin": "Yasin",
+  "ayahs": 83
+ },
+ {
+  "number": 37,
+  "latin": "As-Saffat",
+  "ayahs": 182
+ },
+ {
+  "number": 38,
+  "latin": "Sad",
+  "ayahs": 88
+ },
+ {
+  "number": 39,
+  "latin": "Az-Zumar",
+  "ayahs": 75
+ },
+ {
+  "number": 40,
+  "latin": "Gafir",
+  "ayahs": 85
+ },
+ {
+  "number": 41,
+  "latin": "Fussilat",
+  "ayahs": 54
+ },
+ {
+  "number": 42,
+  "latin": "Asy-Syura",
+  "ayahs": 53
+ },
+ {
+  "number": 43,
+  "latin": "Az-Zukhruf",
+  "ayahs": 89
+ },
+ {
+  "number": 44,
+  "latin": "Ad-Dukhan",
+  "ayahs": 59
+ },
+ {
+  "number": 45,
+  "latin": "Al-Jasiyah",
+  "ayahs": 37
+ },
+ {
+  "number": 46,
+  "latin": "Al-Ahqaf",
+  "ayahs": 35
+ },
+ {
+  "number": 47,
+  "latin": "Muhammad",
+  "ayahs": 38
+ },
+ {
+  "number": 48,
+  "latin": "Al-Fath",
+  "ayahs": 29
+ },
+ {
+  "number": 49,
+  "latin": "Al-Hujurat",
+  "ayahs": 18
+ },
+ {
+  "number": 50,
+  "latin": "Qaf",
+  "ayahs": 45
+ },
+ {
+  "number": 51,
+  "latin": "Az-Zariyat",
+  "ayahs": 60
+ },
+ {
+  "number": 52,
+  "latin": "At-Tur",
+  "ayahs": 49
+ },
+ {
+  "number": 53,
+  "latin": "An-Najm",
+  "ayahs": 62
+ },
+ {
+  "number": 54,
+  "latin": "Al-Qamar",
+  "ayahs": 55
+ },
+ {
+  "number": 55,
+  "latin": "Ar-Rahman",
+  "ayahs": 78
+ },
+ {
+  "number": 56,
+  "latin": "Al-Waqi'ah",
+  "ayahs": 96
+ },
+ {
+  "number": 57,
+  "latin": "Al-Hadid",
+  "ayahs": 29
+ },
+ {
+  "number": 58,
+  "latin": "Al-Mujadalah",
+  "ayahs": 22
+ },
+ {
+  "number": 59,
+  "latin": "Al-Hasyr",
+  "ayahs": 24
+ },
+ {
+  "number": 60,
+  "latin": "Al-Mumtahanah",
+  "ayahs": 13
+ },
+ {
+  "number": 61,
+  "latin": "As-Saff",
+  "ayahs": 14
+ },
+ {
+  "number": 62,
+  "latin": "Al-Jumu'ah",
+  "ayahs": 11
+ },
+ {
+  "number": 63,
+  "latin": "Al-Munafiqun",
+  "ayahs": 11
+ },
+ {
+  "number": 64,
+  "latin": "At-Tagabun",
+  "ayahs": 18
+ },
+ {
+  "number": 65,
+  "latin": "At-Talaq",
+  "ayahs": 12
+ },
+ {
+  "number": 66,
+  "latin": "At-Tahrim",
+  "ayahs": 12
+ },
+ {
+  "number": 67,
+  "latin": "Al-Mulk",
+  "ayahs": 30
+ },
+ {
+  "number": 68,
+  "latin": "Al-Qalam",
+  "ayahs": 52
+ },
+ {
+  "number": 69,
+  "latin": "Al-Haqqah",
+  "ayahs": 52
+ },
+ {
+  "number": 70,
+  "latin": "Al-Ma'arij",
+  "ayahs": 44
+ },
+ {
+  "number": 71,
+  "latin": "Nuh",
+  "ayahs": 28
+ },
+ {
+  "number": 72,
+  "latin": "Al-Jinn",
+  "ayahs": 28
+ },
+ {
+  "number": 73,
+  "latin": "Al-Muzzammil",
+  "ayahs": 20
+ },
+ {
+  "number": 74,
+  "latin": "Al-Muddassir",
+  "ayahs": 56
+ },
+ {
+  "number": 75,
+  "latin": "Al-Qiyamah",
+  "ayahs": 40
+ },
+ {
+  "number": 76,
+  "latin": "Al-Insan",
+  "ayahs": 31
+ },
+ {
+  "number": 77,
+  "latin": "Al-Mursalat",
+  "ayahs": 50
+ },
+ {
+  "number": 78,
+  "latin": "An-Naba'",
+  "ayahs": 40
+ },
+ {
+  "number": 79,
+  "latin": "An-Nazi'at",
+  "ayahs": 46
+ },
+ {
+  "number": 80,
+  "latin": "'Abasa",
+  "ayahs": 42
+ },
+ {
+  "number": 81,
+  "latin": "At-Takwir",
+  "ayahs": 29
+ },
+ {
+  "number": 82,
+  "latin": "Al-Infitar",
+  "ayahs": 19
+ },
+ {
+  "number": 83,
+  "latin": "Al-Mutaffifin",
+  "ayahs": 36
+ },
+ {
+  "number": 84,
+  "latin": "Al-Insyiqaq",
+  "ayahs": 25
+ },
+ {
+  "number": 85,
+  "latin": "Al-Buruj",
+  "ayahs": 22
+ },
+ {
+  "number": 86,
+  "latin": "At-Tariq",
+  "ayahs": 17
+ },
+ {
+  "number": 87,
+  "latin": "Al-A'la",
+  "ayahs": 19
+ },
+ {
+  "number": 88,
+  "latin": "Al-Gasyiyah",
+  "ayahs": 26
+ },
+ {
+  "number": 89,
+  "latin": "Al-Fajr",
+  "ayahs": 30
+ },
+ {
+  "number": 90,
+  "latin": "Al-Balad",
+  "ayahs": 20
+ },
+ {
+  "number": 91,
+  "latin": "Asy-Syams",
+  "ayahs": 15
+ },
+ {
+  "number": 92,
+  "latin": "Al-Lail",
+  "ayahs": 21
+ },
+ {
+  "number": 93,
+  "latin": "Ad-Duha",
+  "ayahs": 11
+ },
+ {
+  "number": 94,
+  "latin": "Asy-Syarh",
+  "ayahs": 8
+ },
+ {
+  "number": 95,
+  "latin": "At-Tin",
+  "ayahs": 8
+ },
+ {
+  "number": 96,
+  "latin": "Al-'Alaq",
+  "ayahs": 19
+ },
+ {
+  "number": 97,
+  "latin": "Al-Qadr",
+  "ayahs": 5
+ },
+ {
+  "number": 98,
+  "latin": "Al-Bayyinah",
+  "ayahs": 8
+ },
+ {
+  "number": 99,
+  "latin": "Az-Zalzalah",
+  "ayahs": 8
+ },
+ {
+  "number": 100,
+  "latin": "Al-'Adiyat",
+  "ayahs": 11
+ },
+ {
+  "number": 101,
+  "latin": "Al-Qari'ah",
+  "ayahs": 11
+ },
+ {
+  "number": 102,
+  "latin": "At-Takasur",
+  "ayahs": 8
+ },
+ {
+  "number": 103,
+  "latin": "Al-'Asr",
+  "ayahs": 3
+ },
+ {
+  "number": 104,
+  "latin": "Al-Humazah",
+  "ayahs": 9
+ },
+ {
+  "number": 105,
+  "latin": "Al-Fil",
+  "ayahs": 5
+ },
+ {
+  "number": 106,
+  "latin": "Quraisy",
+  "ayahs": 4
+ },
+ {
+  "number": 107,
+  "latin": "Al-Ma'un",
+  "ayahs": 7
+ },
+ {
+  "number": 108,
+  "latin": "Al-Kausar",
+  "ayahs": 3
+ },
+ {
+  "number": 109,
+  "latin": "Al-Kafirun",
+  "ayahs": 6
+ },
+ {
+  "number": 110,
+  "latin": "An-Nasr",
+  "ayahs": 3
+ },
+ {
+  "number": 111,
+  "latin": "Al-Lahab",
+  "ayahs": 5
+ },
+ {
+  "number": 112,
+  "latin": "Al-Ikhlas",
+  "ayahs": 4
+ },
+ {
+  "number": 113,
+  "latin": "Al-Falaq",
+  "ayahs": 5
+ },
+ {
+  "number": 114,
+  "latin": "An-Nas",
+  "ayahs": 6
+ }
+]

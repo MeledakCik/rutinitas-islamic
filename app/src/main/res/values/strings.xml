@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Rutinitas</string>
+    <string name="lockscreen_channel_name">Rutinitas di layar kunci</string>
+    <string name="lockscreen_channel_description">Menampilkan ringkasan rutinitas dan target hafalan dengan isi publik yang ringkas.</string>
+    <string name="routine_widget_name">Rutinitas Hafalan</string>
+    <string name="routine_widget_description">Ringkasan rutinitas dan target hafalan.</string>
+    <string name="routine_widget_brand">RUTINITAS</string>
+    <string name="routine_widget_title_default">Rutinitas</string>
+    <string name="routine_widget_text_default">Buka untuk melihat rutinitas hari ini.</string>
+    <string name="native_migration_status">Memeriksa data versi sebelumnya…</string>
+    <string name="native_notification_setting">Notifikasi layar kunci</string>
+    <string name="native_widget_setting">Widget layar utama</string>
+    <string name="native_quran_unavailable">Teks mushaf offline tidak tersedia.</string>
+    <string name="lockscreen_preview_eyebrow">PRATINJAU · TANPA MEMBUKA APLIKASI</string>
+    <string name="lockscreen_preview_close">Tutup pratinjau</string>
+</resources>

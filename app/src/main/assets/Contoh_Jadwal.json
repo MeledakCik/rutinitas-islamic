@@ -1,0 +1,1385 @@
+{
+  "schemaVersion": 10,
+  "exportedAt": "2026-11-21T07:57:00.000Z",
+  "activeRoutineProfileId": "profile_2",
+  "routineProfiles": {
+    "profile_1": {
+      "name": "Profil 1 · Kuliah Normal",
+      "customRoutines": [
+        {
+          "id": "p1_mon_commute_go",
+          "title": "Perjalanan Motor ke Kampus (Senin)",
+          "protocol": "Fokus penuh jalan raya (0 audio/hafalan/ponsel) selama 2 jam perjalanan menuju kampus.",
+          "anchor": {
+            "type": "fixed",
+            "time": "09:00"
+          },
+          "windowMins": 120,
+          "durationMins": 120,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": true,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            1
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_mon_class_algo",
+          "title": "Kuliah: Analisis & Strategi Algoritma (R5407)",
+          "protocol": "Catat struktur algoritma, pseudocode, dan analisis kompleksitas waktu/ruang secara langsung.",
+          "anchor": {
+            "type": "fixed",
+            "time": "11:10"
+          },
+          "windowMins": 100,
+          "durationMins": 100,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            1
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_mon_dzuhur_hifz",
+          "title": "Dzuhur, Makan Siang, Cek Hifz 15m & Review Catatan",
+          "protocol": "Shalat Dzuhur, makan siang, murajaah target hafalan 15 menit tanpa Mushaf, lalu tinjau catatan pagi 20 menit.",
+          "anchor": {
+            "type": "fixed",
+            "time": "12:50"
+          },
+          "windowMins": 100,
+          "durationMins": 35,
+          "isFlexible": true,
+          "includeHifzTarget": true,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            1
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_mon_class_jarkom",
+          "title": "Kuliah: Jaringan Komputer (LAB-CISCO)",
+          "protocol": "Praktikum Packet Tracer/CLI dan catat topologi serta perintah konfigurasi jaringan.",
+          "anchor": {
+            "type": "fixed",
+            "time": "14:30"
+          },
+          "windowMins": 150,
+          "durationMins": 150,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            1
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_mon_commute_back",
+          "title": "Perjalanan Motor Pulang (Senin)",
+          "protocol": "Maksimal 1 batang rokok sebelum naik motor. Fokus penuh di jalan tanpa audio atau hafalan.",
+          "anchor": {
+            "type": "fixed",
+            "time": "17:00"
+          },
+          "windowMins": 120,
+          "durationMins": 120,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": true,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            1
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_mon_evening_review",
+          "title": "Review Catatan Lab Jaringan Komputer (45m)",
+          "protocol": "Rapikan catatan lab dan latihan subnetting/CLI hari ini. Berhenti tepat pukul 20:30 demi tidur 22:00.",
+          "anchor": {
+            "type": "fixed",
+            "time": "19:45"
+          },
+          "windowMins": 45,
+          "durationMins": 45,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            1
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_tue_commute_go",
+          "title": "Perjalanan Motor ke Kampus (Selasa)",
+          "protocol": "Fokus penuh jalan raya (0 audio/hafalan/ponsel) selama 2 jam perjalanan menuju kampus.",
+          "anchor": {
+            "type": "fixed",
+            "time": "08:15"
+          },
+          "windowMins": 120,
+          "durationMins": 120,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": true,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            2
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_tue_class_imk",
+          "title": "Kuliah: Interaksi Manusia & Komputer (R5307)",
+          "protocol": "Catat kerangka evaluasi heuristik, prinsip usability, dan studi kasus antarmuka.",
+          "anchor": {
+            "type": "fixed",
+            "time": "10:20"
+          },
+          "windowMins": 150,
+          "durationMins": 150,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            2
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_tue_dzuhur_hifz",
+          "title": "Dzuhur, Makan Siang, Cek Hifz 15m & Review Catatan",
+          "protocol": "Shalat Dzuhur, makan siang, murajaah target hafalan 15 menit tanpa Mushaf, lalu tinjau catatan IMK 20 menit.",
+          "anchor": {
+            "type": "fixed",
+            "time": "12:50"
+          },
+          "windowMins": 100,
+          "durationMins": 35,
+          "isFlexible": true,
+          "includeHifzTarget": true,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            2
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_tue_class_pdsd",
+          "title": "Kuliah: Pemrograman Dasar Sains Data (LAB-7)",
+          "protocol": "Tulis dan uji skrip Python/manipulasi data langsung di lab.",
+          "anchor": {
+            "type": "fixed",
+            "time": "14:30"
+          },
+          "windowMins": 100,
+          "durationMins": 100,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            2
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_tue_commute_back",
+          "title": "Perjalanan Motor Pulang (Selasa)",
+          "protocol": "Maksimal 1 batang rokok sebelum naik motor. Fokus penuh di jalan tanpa audio atau hafalan.",
+          "anchor": {
+            "type": "fixed",
+            "time": "16:10"
+          },
+          "windowMins": 125,
+          "durationMins": 125,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": true,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            2
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_tue_evening_review",
+          "title": "Review Latihan Python & IMK Hari Ini (45m)",
+          "protocol": "Ulangi potongan kode Python dan poin IMK hari ini. Berhenti tepat pukul 20:30 demi tidur 22:00.",
+          "anchor": {
+            "type": "fixed",
+            "time": "19:45"
+          },
+          "windowMins": 45,
+          "durationMins": 45,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            2
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_wed_commute_go",
+          "title": "Perjalanan Motor ke Kampus (Rabu)",
+          "protocol": "Fokus penuh jalan raya (0 audio/hafalan/ponsel) selama 2 jam perjalanan menuju kampus.",
+          "anchor": {
+            "type": "fixed",
+            "time": "07:20"
+          },
+          "windowMins": 120,
+          "durationMins": 120,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": true,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            3
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_wed_class_psd",
+          "title": "Kuliah: Pengantar Sains Data (R5305)",
+          "protocol": "Catat definisi inti, siklus sains data, dan studi kasus penerapan analitik.",
+          "anchor": {
+            "type": "fixed",
+            "time": "09:30"
+          },
+          "windowMins": 150,
+          "durationMins": 150,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            3
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_wed_dzuhur_hifz",
+          "title": "Dzuhur, Makan Siang, Cek Hifz 15m & Review Catatan",
+          "protocol": "Shalat Dzuhur, makan siang, murajaah target hafalan 15 menit tanpa Mushaf, lalu tinjau catatan pagi 20 menit.",
+          "anchor": {
+            "type": "fixed",
+            "time": "12:00"
+          },
+          "windowMins": 100,
+          "durationMins": 35,
+          "isFlexible": true,
+          "includeHifzTarget": true,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            3
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_wed_class_basdat",
+          "title": "Kuliah: Analisis & Desain Basis Data (RDAGO9)",
+          "protocol": "Latihan perancangan ERD, normalisasi tabel, dan penyusunan query SQL.",
+          "anchor": {
+            "type": "fixed",
+            "time": "13:40"
+          },
+          "windowMins": 150,
+          "durationMins": 150,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            3
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_wed_commute_back",
+          "title": "Perjalanan Motor Pulang (Rabu)",
+          "protocol": "Maksimal 1 batang rokok sebelum naik motor. Fokus penuh di jalan tanpa audio atau hafalan.",
+          "anchor": {
+            "type": "fixed",
+            "time": "16:10"
+          },
+          "windowMins": 125,
+          "durationMins": 125,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": true,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            3
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_wed_evening_review",
+          "title": "Latihan Drill SQL & ERD Hari Ini (45m)",
+          "protocol": "Tulis ulang query SQL dan skema ERD hari ini dari nol. Berhenti tepat pukul 20:30 demi tidur 22:00.",
+          "anchor": {
+            "type": "fixed",
+            "time": "19:45"
+          },
+          "windowMins": 45,
+          "durationMins": 45,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            3
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_thu_morning_deep",
+          "title": "Deep Work: Latihan Soal Jaringan Komputer & Algoritma",
+          "protocol": "Kerjakan problem set Jarkom (Packet Tracer/CLI) dan tracing kompleksitas Algoritma tanpa melihat catatan.",
+          "anchor": {
+            "type": "fixed",
+            "time": "08:30"
+          },
+          "windowMins": 120,
+          "durationMins": 120,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            4
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_thu_dzuhur_hifz",
+          "title": "Dzuhur + Cek Hafalan Siang 15m",
+          "protocol": "Shalat Dzuhur, lalu lafalkan target hafalan hari ini selama 15 menit dengan lancar tanpa melihat Mushaf.",
+          "anchor": {
+            "type": "prayer",
+            "prayer": "dzuhur",
+            "offsetMins": 15
+          },
+          "windowMins": 45,
+          "durationMins": 15,
+          "isFlexible": true,
+          "includeHifzTarget": true,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            4
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_thu_afternoon_labs",
+          "title": "Lab Coding: Basis Data & Pemrograman Sains Data",
+          "protocol": "Tulis query SQL, skema ERD, dan skrip Python dari awal lalu verifikasi hasil eksekusinya.",
+          "anchor": {
+            "type": "fixed",
+            "time": "13:30"
+          },
+          "windowMins": 90,
+          "durationMins": 90,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            4
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_thu_pre_os_skim",
+          "title": "Baca Sekilas Slide Sistem Operasi Jumat (15m)",
+          "protocol": "Tinjau slide Sistem Operasi besok selama 15 menit. Batas maksimal 1 batang rokok sebelum pukul 17:00.",
+          "anchor": {
+            "type": "fixed",
+            "time": "16:30"
+          },
+          "windowMins": 30,
+          "durationMins": 15,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            4
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_fri_morning_os",
+          "title": "Persiapan & Latihan Soal Sistem Operasi",
+          "protocol": "Kerjakan latihan penjadwalan proses, sinkronisasi, dan manajemen memori sebelum berangkat.",
+          "anchor": {
+            "type": "fixed",
+            "time": "08:30"
+          },
+          "windowMins": 120,
+          "durationMins": 120,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            5
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_fri_commute_go",
+          "title": "Perjalanan Motor ke Kampus (Jumat)",
+          "protocol": "Fokus penuh jalan raya (0 audio/hafalan/ponsel) selama perjalanan menuju kampus; tiba sebelum adzan Dzuhur/Jumat.",
+          "anchor": {
+            "type": "fixed",
+            "time": "10:30"
+          },
+          "windowMins": 60,
+          "durationMins": 60,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": true,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            5
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_fri_jumat_hifz",
+          "title": "Shalat Jumat & Cek Hifz 15m (Kampus)",
+          "protocol": "Tunaikan Shalat Jumat di kampus, lalu duduk tenang 15 menit melafalkan target hafalan hari ini tanpa Mushaf.",
+          "anchor": {
+            "type": "prayer",
+            "prayer": "dzuhur",
+            "offsetMins": 0
+          },
+          "windowMins": 90,
+          "durationMins": 15,
+          "isFlexible": true,
+          "includeHifzTarget": true,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            5
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_fri_class_os",
+          "title": "Kuliah: Sistem Operasi (R5506)",
+          "protocol": "Simak materi dan catat konsep inti manajemen proses, memori, dan sistem berkas.",
+          "anchor": {
+            "type": "fixed",
+            "time": "13:40"
+          },
+          "windowMins": 150,
+          "durationMins": 150,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            5
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_fri_commute_back",
+          "title": "Perjalanan Motor Pulang (Jumat)",
+          "protocol": "Maksimal 1 batang rokok sebelum naik motor. Fokus penuh di jalan tanpa audio/hafalan; malam istirahat total.",
+          "anchor": {
+            "type": "fixed",
+            "time": "16:10"
+          },
+          "windowMins": 125,
+          "durationMins": 125,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": true,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            5
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_sat_morning_labs",
+          "title": "Deep Labs: Sistem Operasi & Jaringan Komputer",
+          "protocol": "Selesaikan praktikum mendalam Sistem Operasi dan simulasi CLI/Packet Tracer Jaringan Komputer.",
+          "anchor": {
+            "type": "fixed",
+            "time": "08:30"
+          },
+          "windowMins": 120,
+          "durationMins": 120,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            6
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_sat_dzuhur_hifz",
+          "title": "Dzuhur + Cek Hafalan Siang 15m",
+          "protocol": "Shalat Dzuhur, lalu lafalkan target hafalan hari ini selama 15 menit dengan lancar tanpa melihat Mushaf.",
+          "anchor": {
+            "type": "prayer",
+            "prayer": "dzuhur",
+            "offsetMins": 15
+          },
+          "windowMins": 45,
+          "durationMins": 15,
+          "isFlexible": true,
+          "includeHifzTarget": true,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            6
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_sat_afternoon_summary",
+          "title": "Ringkasan 1 Halaman: Pengantar Sains Data & IMK",
+          "protocol": "Padatkan materi pekan ini menjadi ringkasan 1 halaman dan uji hafalan definisi (maks. 1 rokok sebelum 17:00).",
+          "anchor": {
+            "type": "fixed",
+            "time": "13:30"
+          },
+          "windowMins": 90,
+          "durationMins": 90,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            6
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_sun_morning_backlog",
+          "title": "Kejar Backlog Akademik & Persiapan Kuliah Senin",
+          "protocol": "Tuntaskan sisa tugas pekan ini dan siapkan materi Algoritma & Jaringan Komputer untuk Senin.",
+          "anchor": {
+            "type": "fixed",
+            "time": "08:30"
+          },
+          "windowMins": 120,
+          "durationMins": 120,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            0
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p1_sun_dzuhur_hifz",
+          "title": "Dzuhur + Cek Hafalan Pekanan 15m",
+          "protocol": "Shalat Dzuhur, lalu uji kelancaran hafalan target pekan ini selama 15 menit tanpa Mushaf. Sore istirahat.",
+          "anchor": {
+            "type": "prayer",
+            "prayer": "dzuhur",
+            "offsetMins": 15
+          },
+          "windowMins": 45,
+          "durationMins": 15,
+          "isFlexible": true,
+          "includeHifzTarget": true,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            0
+          ],
+          "enabled": true
+        }
+      ]
+    },
+    "profile_2": {
+      "name": "Profil 2 · Minggu Tenang",
+      "customRoutines": [
+        {
+          "id": "p2_daily_tier1",
+          "title": "Tier 1: Jaringan Komputer, Sistem Operasi & Algoritma",
+          "protocol": "Selesaikan 1 lab Packet Tracer/CLI, soal proses/memori OS, atau latihan UTS Algoritma tanpa melihat catatan.",
+          "anchor": {
+            "type": "fixed",
+            "time": "09:00"
+          },
+          "windowMins": 120,
+          "durationMins": 120,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p2_daily_dzuhur_hifz",
+          "title": "Dzuhur + Cek Hafalan Siang 15m",
+          "protocol": "Shalat Dzuhur, lalu lafalkan 2 halaman perbaikan hari ini selama 15 menit dengan lancar tanpa melihat Mushaf.",
+          "anchor": {
+            "type": "prayer",
+            "prayer": "dzuhur",
+            "offsetMins": 15
+          },
+          "windowMins": 30,
+          "durationMins": 15,
+          "isFlexible": true,
+          "includeHifzTarget": true,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p2_daily_tier2",
+          "title": "Tier 2: Basis Data & Pemrograman Dasar Sains Data",
+          "protocol": "Tulis query SQL, skema ERD, atau blok kode Python dari nol dan verifikasi output eksekusinya.",
+          "anchor": {
+            "type": "fixed",
+            "time": "13:30"
+          },
+          "windowMins": 90,
+          "durationMins": 90,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p2_mwf_tier3",
+          "title": "Tier 3: Pengantar Sains Data & IMK (Ringkasan 1 Halaman)",
+          "protocol": "Buat ringkasan 1 halaman per topik dan uji hafalan definisi serta studi kasus (maks. 1 rokok sebelum 17:00).",
+          "anchor": {
+            "type": "fixed",
+            "time": "16:00"
+          },
+          "windowMins": 60,
+          "durationMins": 60,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            1,
+            3,
+            5
+          ],
+          "enabled": true
+        }
+      ]
+    },
+    "profile_3": {
+      "name": "Profil 3 · Pekan Ujian",
+      "customRoutines": [
+        {
+          "id": "p3_mon_commute_go",
+          "title": "Perjalanan Motor ke Kampus (Pekan Ujian)",
+          "protocol": "Fokus penuh jalan raya (0 audio/hafalan/ponsel) selama 2 jam perjalanan; tiba sebelum ujian pukul 11:10.",
+          "anchor": {
+            "type": "fixed",
+            "time": "09:00"
+          },
+          "windowMins": 120,
+          "durationMins": 120,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": true,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            1
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_mon_exam_algo",
+          "title": "UJIAN: Analisis & Strategi Algoritma (R5407)",
+          "protocol": "Durasi 90 menit (11:10–12:40). Kerjakan analisis kompleksitas dan tracing algoritma secara sistematis.",
+          "anchor": {
+            "type": "fixed",
+            "time": "11:10"
+          },
+          "windowMins": 90,
+          "durationMins": 90,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            1
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_mon_dzuhur_hifz",
+          "title": "Dzuhur, Makan Siang, Cek Hifz 15m & Review Jarkom",
+          "protocol": "Shalat Dzuhur, makan siang, murajaah target hafalan 15 menit tanpa Mushaf, dan pemanasan subnetting/CLI 20 menit.",
+          "anchor": {
+            "type": "fixed",
+            "time": "12:40"
+          },
+          "windowMins": 105,
+          "durationMins": 35,
+          "isFlexible": true,
+          "includeHifzTarget": true,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            1
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_mon_exam_jarkom",
+          "title": "UJIAN: Jaringan Komputer (LAB-CISCO)",
+          "protocol": "Durasi 90 menit (14:30–16:00). Verifikasi perhitungan subnet IPv4 dan konfigurasi CLI sebelum dikumpulkan.",
+          "anchor": {
+            "type": "fixed",
+            "time": "14:30"
+          },
+          "windowMins": 90,
+          "durationMins": 90,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            1
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_mon_commute_back",
+          "title": "Perjalanan Motor Pulang (Pekan Ujian)",
+          "protocol": "Maksimal 1 batang rokok sebelum naik motor. Fokus penuh di jalan tanpa audio atau hafalan.",
+          "anchor": {
+            "type": "fixed",
+            "time": "16:00"
+          },
+          "windowMins": 120,
+          "durationMins": 120,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": true,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            1
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_mon_prep_tue",
+          "title": "Persiapan Ringan Ujian Selasa (IMK & Pemrog. Sains Data)",
+          "protocol": "Tinjau ringkasan 1 halaman IMK dan sintaks inti Python/Pandas. Berhenti tepat pukul 20:30 demi tidur 22:00.",
+          "anchor": {
+            "type": "fixed",
+            "time": "19:45"
+          },
+          "windowMins": 45,
+          "durationMins": 45,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            1
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_tue_commute_go",
+          "title": "Perjalanan Motor ke Kampus (Pekan Ujian)",
+          "protocol": "Fokus penuh jalan raya (0 audio/hafalan/ponsel) selama 2 jam perjalanan; tiba sebelum ujian pukul 10:20.",
+          "anchor": {
+            "type": "fixed",
+            "time": "08:15"
+          },
+          "windowMins": 120,
+          "durationMins": 120,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": true,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            2
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_tue_exam_imk",
+          "title": "UJIAN: Interaksi Manusia & Komputer (R5307)",
+          "protocol": "Durasi 90 menit (10:20–11:50). Jawab studi kasus heuristik usability dan prinsip desain secara terstruktur.",
+          "anchor": {
+            "type": "fixed",
+            "time": "10:20"
+          },
+          "windowMins": 90,
+          "durationMins": 90,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            2
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_tue_dzuhur_hifz",
+          "title": "Dzuhur, Makan Siang, Cek Hifz 15m & Review Python",
+          "protocol": "Shalat Dzuhur, makan siang, murajaah target hafalan 15 menit tanpa Mushaf, dan pemanasan sintaks Python 20 menit.",
+          "anchor": {
+            "type": "fixed",
+            "time": "11:50"
+          },
+          "windowMins": 155,
+          "durationMins": 35,
+          "isFlexible": true,
+          "includeHifzTarget": true,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            2
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_tue_exam_pdsd",
+          "title": "UJIAN: Pemrograman Dasar Sains Data (LAB-7)",
+          "protocol": "Durasi 90 menit (14:30–16:00). Uji logika program dan verifikasi output tiap bagian kode sebelum submit.",
+          "anchor": {
+            "type": "fixed",
+            "time": "14:30"
+          },
+          "windowMins": 90,
+          "durationMins": 90,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            2
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_tue_commute_back",
+          "title": "Perjalanan Motor Pulang (Pekan Ujian)",
+          "protocol": "Maksimal 1 batang rokok sebelum naik motor. Fokus penuh di jalan tanpa audio atau hafalan.",
+          "anchor": {
+            "type": "fixed",
+            "time": "16:00"
+          },
+          "windowMins": 120,
+          "durationMins": 120,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": true,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            2
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_tue_prep_wed",
+          "title": "Persiapan Ringan Ujian Rabu (Peng. Sains Data & Basis Data)",
+          "protocol": "Tinjau ringkasan 1 halaman Pengantar Sains Data serta ERD, normalisasi, dan SQL. Berhenti tepat pukul 20:30.",
+          "anchor": {
+            "type": "fixed",
+            "time": "19:45"
+          },
+          "windowMins": 45,
+          "durationMins": 45,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            2
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_wed_commute_go",
+          "title": "Perjalanan Motor ke Kampus (Pekan Ujian)",
+          "protocol": "Fokus penuh jalan raya (0 audio/hafalan/ponsel) selama 2 jam perjalanan; tiba sebelum ujian pukul 09:30.",
+          "anchor": {
+            "type": "fixed",
+            "time": "07:20"
+          },
+          "windowMins": 120,
+          "durationMins": 120,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": true,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            3
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_wed_exam_psd",
+          "title": "UJIAN: Pengantar Sains Data (R5305)",
+          "protocol": "Durasi 90 menit (09:30–11:00). Fokus konsep siklus sains data, metrik evaluasi model, dan studi kasus.",
+          "anchor": {
+            "type": "fixed",
+            "time": "09:30"
+          },
+          "windowMins": 90,
+          "durationMins": 90,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            3
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_wed_dzuhur_hifz",
+          "title": "Dzuhur, Makan Siang, Cek Hifz 15m & Review SQL/ERD",
+          "protocol": "Shalat Dzuhur, makan siang, murajaah target hafalan 15 menit tanpa Mushaf, dan pemanasan ERD/SQL 20 menit.",
+          "anchor": {
+            "type": "fixed",
+            "time": "11:00"
+          },
+          "windowMins": 155,
+          "durationMins": 35,
+          "isFlexible": true,
+          "includeHifzTarget": true,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            3
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_wed_exam_basdat",
+          "title": "UJIAN: Analisis & Desain Basis Data (RDAGO9)",
+          "protocol": "Durasi 90 menit (13:40–15:10). Periksa kardinalitas ERD, aturan normalisasi, dan ketepatan query SQL.",
+          "anchor": {
+            "type": "fixed",
+            "time": "13:40"
+          },
+          "windowMins": 90,
+          "durationMins": 90,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            3
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_wed_commute_back",
+          "title": "Perjalanan Motor Pulang (Pekan Ujian)",
+          "protocol": "Maksimal 1 batang rokok sebelum naik motor (sebelum 17:00). Fokus penuh di jalan tanpa audio/hafalan.",
+          "anchor": {
+            "type": "fixed",
+            "time": "15:10"
+          },
+          "windowMins": 120,
+          "durationMins": 120,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": true,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            3
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_wed_evening_cooldown",
+          "title": "Pemulihan Mental & Tinjauan Ringan Sistem Operasi (45m)",
+          "protocol": "Pendinginan pasca-3 hari ujian; baca sekilas peta konsep Sistem Operasi. Berhenti tepat pukul 20:30.",
+          "anchor": {
+            "type": "fixed",
+            "time": "19:45"
+          },
+          "windowMins": 45,
+          "durationMins": 45,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            3
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_thu_prep_os_1",
+          "title": "Persiapan Ujian: Sistem Operasi (Latihan Terfokus)",
+          "protocol": "Latihan soal penjadwalan CPU, deadlock/sinkronisasi, dan manajemen memori tanpa melihat catatan.",
+          "anchor": {
+            "type": "fixed",
+            "time": "09:00"
+          },
+          "windowMins": 90,
+          "durationMins": 90,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            4
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_thu_dzuhur_hifz",
+          "title": "Dzuhur + Cek Hafalan Siang 15m",
+          "protocol": "Shalat Dzuhur, lalu lafalkan target hafalan hari ini selama 15 menit dengan lancar tanpa melihat Mushaf.",
+          "anchor": {
+            "type": "prayer",
+            "prayer": "dzuhur",
+            "offsetMins": 15
+          },
+          "windowMins": 45,
+          "durationMins": 15,
+          "isFlexible": true,
+          "includeHifzTarget": true,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            4
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_thu_prep_os_2",
+          "title": "Simulasi Ringan Soal Sistem Operasi (Sesi 2)",
+          "protocol": "Review poin lemah dari sesi pagi dan ringkas rumus inti (maks. 1 rokok sebelum pukul 17:00).",
+          "anchor": {
+            "type": "fixed",
+            "time": "14:00"
+          },
+          "windowMins": 60,
+          "durationMins": 60,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            4
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_fri_commute_go",
+          "title": "Perjalanan Motor ke Kampus (Jumat Ujian)",
+          "protocol": "Fokus penuh jalan raya (0 audio/hafalan/ponsel) selama perjalanan menuju kampus; tiba sebelum adzan Dzuhur/Jumat.",
+          "anchor": {
+            "type": "fixed",
+            "time": "10:30"
+          },
+          "windowMins": 60,
+          "durationMins": 60,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": true,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            5
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_fri_jumat_hifz",
+          "title": "Shalat Jumat & Cek Hifz 15m (Kampus)",
+          "protocol": "Tunaikan Shalat Jumat di kampus, lalu duduk tenang 15 menit melafalkan target hafalan hari ini tanpa Mushaf.",
+          "anchor": {
+            "type": "prayer",
+            "prayer": "dzuhur",
+            "offsetMins": 0
+          },
+          "windowMins": 95,
+          "durationMins": 15,
+          "isFlexible": true,
+          "includeHifzTarget": true,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            5
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_fri_exam_os",
+          "title": "UJIAN: Sistem Operasi (R5506)",
+          "protocol": "Durasi 90 menit (13:40–15:10). Ujian penutup pekan; periksa kembali langkah perhitungan penjadwalan & memori.",
+          "anchor": {
+            "type": "fixed",
+            "time": "13:40"
+          },
+          "windowMins": 90,
+          "durationMins": 90,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            5
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_fri_commute_back",
+          "title": "Perjalanan Motor Pulang (Pekan Ujian Selesai)",
+          "protocol": "Maksimal 1 batang rokok sebelum naik motor. Fokus penuh di jalan tanpa audio/hafalan; malam istirahat.",
+          "anchor": {
+            "type": "fixed",
+            "time": "15:10"
+          },
+          "windowMins": 120,
+          "durationMins": 120,
+          "isFlexible": false,
+          "includeHifzTarget": false,
+          "isCommute": true,
+          "conflictPolicy": "strict",
+          "daysOfWeek": [
+            5
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_sat_recovery_audit",
+          "title": "Pemulihan Pasca-Ujian & Rapikan Arsip Kuliah",
+          "protocol": "Evaluasi ringan hasil pekan ujian, arsipkan catatan/berkas mata kuliah, dan pulihkan energi mental.",
+          "anchor": {
+            "type": "fixed",
+            "time": "09:30"
+          },
+          "windowMins": 60,
+          "durationMins": 60,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            6
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_sat_dzuhur_hifz",
+          "title": "Dzuhur + Cek Hafalan Siang 15m",
+          "protocol": "Shalat Dzuhur, lalu lafalkan target hafalan hari ini selama 15 menit dengan lancar tanpa melihat Mushaf.",
+          "anchor": {
+            "type": "prayer",
+            "prayer": "dzuhur",
+            "offsetMins": 15
+          },
+          "windowMins": 45,
+          "durationMins": 15,
+          "isFlexible": true,
+          "includeHifzTarget": true,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            6
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_sun_transition_prep",
+          "title": "Persiapan Pekan Kuliah Normal & Audit Perlengkapan",
+          "protocol": "Siapkan modul kuliah Senin (Algoritma & Jaringan Komputer) dan aktifkan Profil 1 untuk Senin pagi.",
+          "anchor": {
+            "type": "fixed",
+            "time": "09:30"
+          },
+          "windowMins": 60,
+          "durationMins": 60,
+          "isFlexible": true,
+          "includeHifzTarget": false,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            0
+          ],
+          "enabled": true
+        },
+        {
+          "id": "p3_sun_dzuhur_hifz",
+          "title": "Dzuhur + Cek Hafalan Pekanan 15m",
+          "protocol": "Shalat Dzuhur, lalu uji kelancaran hafalan target pekan ini selama 15 menit tanpa Mushaf.",
+          "anchor": {
+            "type": "prayer",
+            "prayer": "dzuhur",
+            "offsetMins": 15
+          },
+          "windowMins": 45,
+          "durationMins": 15,
+          "isFlexible": true,
+          "includeHifzTarget": true,
+          "isCommute": false,
+          "conflictPolicy": "shift",
+          "daysOfWeek": [
+            0
+          ],
+          "enabled": true
+        }
+      ]
+    }
+  },
+  "customRoutines": [
+    {
+      "id": "p2_daily_tier1",
+      "title": "Tier 1: Jaringan Komputer, Sistem Operasi & Algoritma",
+      "protocol": "Selesaikan 1 lab Packet Tracer/CLI, soal proses/memori OS, atau latihan UTS Algoritma tanpa melihat catatan.",
+      "anchor": {
+        "type": "fixed",
+        "time": "09:00"
+      },
+      "windowMins": 120,
+      "durationMins": 120,
+      "isFlexible": true,
+      "includeHifzTarget": false,
+      "isCommute": false,
+      "conflictPolicy": "shift",
+      "daysOfWeek": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "enabled": true
+    },
+    {
+      "id": "p2_daily_dzuhur_hifz",
+      "title": "Dzuhur + Cek Hafalan Siang 15m",
+      "protocol": "Shalat Dzuhur, lalu lafalkan 2 halaman perbaikan hari ini selama 15 menit dengan lancar tanpa melihat Mushaf.",
+      "anchor": {
+        "type": "prayer",
+        "prayer": "dzuhur",
+        "offsetMins": 15
+      },
+      "windowMins": 30,
+      "durationMins": 15,
+      "isFlexible": true,
+      "includeHifzTarget": true,
+      "isCommute": false,
+      "conflictPolicy": "shift",
+      "daysOfWeek": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "enabled": true
+    },
+    {
+      "id": "p2_daily_tier2",
+      "title": "Tier 2: Basis Data & Pemrograman Dasar Sains Data",
+      "protocol": "Tulis query SQL, skema ERD, atau blok kode Python dari nol dan verifikasi output eksekusinya.",
+      "anchor": {
+        "type": "fixed",
+        "time": "13:30"
+      },
+      "windowMins": 90,
+      "durationMins": 90,
+      "isFlexible": true,
+      "includeHifzTarget": false,
+      "isCommute": false,
+      "conflictPolicy": "shift",
+      "daysOfWeek": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "enabled": true
+    },
+    {
+      "id": "p2_mwf_tier3",
+      "title": "Tier 3: Pengantar Sains Data & IMK (Ringkasan 1 Halaman)",
+      "protocol": "Buat ringkasan 1 halaman per topik dan uji hafalan definisi serta studi kasus (maks. 1 rokok sebelum 17:00).",
+      "anchor": {
+        "type": "fixed",
+        "time": "16:00"
+      },
+      "windowMins": 60,
+      "durationMins": 60,
+      "isFlexible": true,
+      "includeHifzTarget": false,
+      "isCommute": false,
+      "conflictPolicy": "shift",
+      "daysOfWeek": [
+        1,
+        3,
+        5
+      ],
+      "enabled": true
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+<resources>
+    <style name="RutinitasBaseTheme" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">#1652F6</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">#F1F0EC</item>
+        <item name="android:windowBackground">#F1F0EC</item>
+        <item name="android:statusBarColor">#F1F0EC</item>
+        <item name="android:windowActionModeOverlay">true</item>
+    </style>
+    <style name="RutinitasLightTheme" parent="@style/RutinitasBaseTheme">
+        <item name="android:colorAccent">#1652F6</item>
+        <item name="android:colorControlActivated">#1652F6</item>
+        <item name="android:colorControlNormal">#65625D</item>
+        <item name="android:textColorPrimary">#111111</item>
+        <item name="android:textColorSecondary">#65625D</item>
+        <item name="android:textColorHint">#65625D</item>
+        <item name="android:windowBackground">#F1F0EC</item>
+        <item name="android:statusBarColor">#F1F0EC</item>
+        <item name="android:navigationBarColor">#F1F0EC</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+    <style name="RutinitasDarkTheme" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">#8FAEFF</item>
+        <item name="android:colorControlActivated">#8FAEFF</item>
+        <item name="android:colorControlNormal">#9C9A95</item>
+        <item name="android:textColorPrimary">#F2F1EE</item>
+        <item name="android:textColorSecondary">#9C9A95</item>
+        <item name="android:textColorHint">#9C9A95</item>
+        <item name="android:windowBackground">#0F0F0E</item>
+        <item name="android:statusBarColor">#0F0F0E</item>
+        <item name="android:navigationBarColor">#0F0F0E</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowActionModeOverlay">true</item>
+    </style>
+    <style name="AppTheme" parent="@style/RutinitasLightTheme" />
+    <style name="LockScreenPreviewTheme" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">#6C8CFF</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowBackground">#121316</item>
+        <item name="android:statusBarColor">#121316</item>
+        <item name="android:navigationBarColor">#121316</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

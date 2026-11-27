@@ -1,0 +1,21 @@
+.gradle/
+**/build/
+local.properties
+.idea/caches/
+.idea/libraries/
+*.iml
+*.apk
+*.aab
+*.jks
+*.keystore
+keystore.properties
+
+# Folder kerja sementara dan hasil build lokal
+/_v12/
+/_v13/
+/_push/
+/Claude outputs/
+/dist/
+build-release.log
+check_quran_tmp.cjs
+.idea/

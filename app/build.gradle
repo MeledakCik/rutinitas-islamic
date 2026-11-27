@@ -1,0 +1,55 @@
+plugins {
+    id 'com.android.application'
+}
+
+def releaseSigningFile = rootProject.file('keystore.properties')
+def releaseSigning = new Properties()
+if (releaseSigningFile.isFile()) {
+    releaseSigningFile.withInputStream { releaseSigning.load(it) }
+}
+def releaseSigningReady = ['storeFile', 'storePassword', 'keyAlias', 'keyPassword']
+        .every { releaseSigning.getProperty(it)?.trim() }
+
+android {
+    namespace 'com.rutinitas.islamic'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'com.rutinitas.islamic'
+        minSdk 24
+        targetSdk 36
+        versionCode 24
+        versionName '1.1.4'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    if (releaseSigningReady) {
+        signingConfigs {
+            release {
+                storeFile rootProject.file(releaseSigning.getProperty('storeFile'))
+                storePassword releaseSigning.getProperty('storePassword')
+                keyAlias releaseSigning.getProperty('keyAlias')
+                keyPassword releaseSigning.getProperty('keyPassword')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            if (releaseSigningReady) signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.webkit:webkit:1.18.0'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.json:json:20240303'
+}
