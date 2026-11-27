@@ -1,0 +1,4 @@
+# Aset dibundel apa adanya: jangan ubah akhir baris (teks Tanzil harus identik byte demi byte)
+app/src/main/assets/** -text
+*.raw -text
+quran-data.xml -text
