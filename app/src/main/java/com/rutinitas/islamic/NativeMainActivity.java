@@ -163,6 +163,16 @@ public final class NativeMainActivity extends Activity {
     private int quranAyah = 1;
     private int quranFontSize = 30;
     private boolean quranReading;
+    private boolean dzikirOpen;
+    private TextView dzikirCountView;
+    private TextView dzikirTargetView;
+    private TextView dzikirLatinView;
+    private TextView dzikirArabicView;
+    private TextView dzikirMeaningView;
+    private TextView dzikirTodayView;
+    private android.widget.ProgressBar dzikirProgress;
+    private Spinner dzikirTargetPicker;
+    private Spinner dzikirPresetPicker;
     private int quranIndexLimit = 24;
     private int quranIndexScroll;
     private String quranSearch = "";
@@ -327,6 +337,7 @@ public final class NativeMainActivity extends Activity {
         String tab = intent == null ? null : intent.getStringExtra("open_tab");
         if (tab == null) return;
         intent.removeExtra("open_tab");
+        if ("dzikir".equals(tab)) { openDzikir(); return; }
         for (String key : NAV_KEYS) if (key.equals(tab)) { renderTab(tab); return; }
     }
 
@@ -627,8 +638,10 @@ public final class NativeMainActivity extends Activity {
         if (switched) {
             tabScroll[indexOf(NAV_KEYS, previous)] = pageScroll.getScrollY();
             if ("quran".equals(previous) && quranAudio != null) quranAudio.pause();
+            if ("prayer".equals(previous)) dzikirOpen = false;
         }
         timerView = null;
+        dzikirCountView = null;
         timerLabelView = null;
         nextPrayerCountdown = null;
         audioTitle = null;
@@ -1704,6 +1717,7 @@ public final class NativeMainActivity extends Activity {
     }
 
     private void renderPrayer() {
+        if (dzikirOpen) { renderDzikir(); return; }
         boolean ready = PrayerReminders.locationReady(state);
         String selected = state.optString("prayerSource", "fixed");
         renderPageHeading("Waktu shalat", PrayerReminders.sourceLabel(state));
@@ -1796,6 +1810,19 @@ public final class NativeMainActivity extends Activity {
         body.addView(timesCard);
         addGap(body, 12);
 
+        NativeDzikir.Counter dzikir = NativeDzikir.load(this);
+        LinearLayout dzikirCard = card();
+        addKicker(dzikirCard, "DZIKIR & TASBIH");
+        dzikirCard.addView(text(NativeDzikir.PRESETS[dzikir.index].latin + " · " + dzikir.count + "/"
+                + NativeDzikir.target(this, dzikir.index), 16, colorPrimary(), true));
+        addGap(dzikirCard, 4);
+        dzikirCard.addView(text("Hari ini " + dzikir.today + " dzikir. Bisa juga dihitung dari widget Tasbih di layar utama.",
+                12, colorMuted(), false));
+        addGap(dzikirCard, 10);
+        dzikirCard.addView(actionButton("Buka penghitung dzikir", R.drawable.ic_add, this::openDzikir));
+        body.addView(dzikirCard);
+        addGap(body, 12);
+
         String[] sourceNames = {"Kota", "GPS", "Manual"};
         String[] sourceKeyOrder = {"city", "gps", "manual"};
         IndonesianCities.City sourceCity = PrayerReminders.city(state);
@@ -1872,6 +1899,164 @@ public final class NativeMainActivity extends Activity {
                     + "ihtiyath dan koreksi ketinggian; hasil dibulatkan ke atas sehingga tidak lebih awal dari jadwal resmi. "
                     + "Bisa berbeda 1–2 menit dari jadwal Kemenag daerahmu.", 12, colorMuted(), false));
         }));
+    }
+
+    private void openDzikir() {
+        dzikirOpen = true;
+        if ("prayer".equals(currentTab)) {
+            renderTab("prayer");
+            if (pageScroll != null) pageScroll.scrollTo(0, 0);
+        } else {
+            renderTab("prayer");
+        }
+    }
+
+    private void closeDzikir() {
+        dzikirOpen = false;
+        renderTab("prayer");
+    }
+
+    private void renderDzikir() {
+        renderPageHeading("Dzikir", "Tasbih digital · ketuk lingkaran untuk menghitung");
+        body.addView(secondaryButton("‹ Kembali ke waktu shalat", this::closeDzikir));
+        addGap(body, 12);
+
+        NativeDzikir.Counter counter = NativeDzikir.load(this);
+        String[] names = new String[NativeDzikir.PRESETS.length];
+        for (int i = 0; i < names.length; i++) {
+            NativeDzikir.Preset preset = NativeDzikir.PRESETS[i];
+            names[i] = preset.latin + (preset.sequence ? " · tasbih setelah shalat" : "");
+        }
+        Spinner presetPicker = spinner(names);
+        dzikirPresetPicker = presetPicker;
+        presetPicker.setSelection(counter.index);
+        presetPicker.setOnItemSelectedListener(simpleItemListener(position -> {
+            NativeDzikir.Counter current = NativeDzikir.load(this);
+            if (position == current.index) return;
+            NativeDzikir.select(current, position);
+            NativeDzikir.save(this, current);
+            DzikirWidgetProvider.refreshAll(this);
+            updateDzikirViews();
+        }));
+        body.addView(labeled("Bacaan", presetPicker));
+        addGap(body, 12);
+
+        LinearLayout counterCard = card();
+        counterCard.setGravity(Gravity.CENTER_HORIZONTAL);
+        dzikirArabicView = arabicText("", 30);
+        dzikirArabicView.setGravity(Gravity.CENTER);
+        counterCard.addView(dzikirArabicView, new LinearLayout.LayoutParams(MATCH, WRAP));
+        dzikirLatinView = text("", 17, colorPrimary(), true);
+        dzikirLatinView.setGravity(Gravity.CENTER);
+        counterCard.addView(dzikirLatinView, new LinearLayout.LayoutParams(MATCH, WRAP));
+        addGap(counterCard, 4);
+        dzikirMeaningView = text("", 13, colorMuted(), false);
+        dzikirMeaningView.setGravity(Gravity.CENTER);
+        counterCard.addView(dzikirMeaningView, new LinearLayout.LayoutParams(MATCH, WRAP));
+        addGap(counterCard, 16);
+
+        LinearLayout tapCircle = new LinearLayout(this);
+        tapCircle.setOrientation(LinearLayout.VERTICAL);
+        tapCircle.setGravity(Gravity.CENTER);
+        GradientDrawable circleFill = new GradientDrawable();
+        circleFill.setShape(GradientDrawable.OVAL);
+        circleFill.setColor(colorAccent());
+        tapCircle.setBackground(circleFill);
+        tapCircle.setClickable(true);
+        tapCircle.setFocusable(true);
+        dzikirCountView = text("0", 56, colorOnAccent(), true);
+        dzikirCountView.setTypeface(monoTypeface(), Typeface.BOLD);
+        tapCircle.addView(dzikirCountView);
+        dzikirTargetView = text("", 14, withAlpha(colorOnAccent(), 210), false);
+        tapCircle.addView(dzikirTargetView);
+        tapCircle.setOnClickListener(view -> {
+            int event = NativeDzikir.tapAndSave(this);
+            if (event == NativeDzikir.EVENT_TARGET_REACHED) toast("Target tercapai. Ketuk lagi untuk lanjut.");
+            updateDzikirViews();
+            view.setContentDescription(dzikirCountView.getText() + " " + dzikirTargetView.getText());
+        });
+        pressScale(tapCircle);
+        counterCard.addView(tapCircle, new LinearLayout.LayoutParams(dp(220), dp(220)));
+        addGap(counterCard, 16);
+
+        dzikirProgress = new android.widget.ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+        dzikirProgress.setProgressTintList(ColorStateList.valueOf(colorAccent()));
+        dzikirProgress.setProgressBackgroundTintList(ColorStateList.valueOf(colorBorder()));
+        dzikirProgress.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        counterCard.addView(dzikirProgress, new LinearLayout.LayoutParams(MATCH, dp(6)));
+        addGap(counterCard, 8);
+        dzikirTodayView = text("", 12, colorMuted(), false);
+        dzikirTodayView.setGravity(Gravity.CENTER);
+        counterCard.addView(dzikirTodayView, new LinearLayout.LayoutParams(MATCH, WRAP));
+        body.addView(counterCard);
+        addGap(body, 12);
+
+        LinearLayout controls = new LinearLayout(this);
+        controls.addView(secondaryButton("Ulangi dari 0", () -> {
+            NativeDzikir.Counter current = NativeDzikir.load(this);
+            NativeDzikir.reset(current);
+            NativeDzikir.save(this, current);
+            DzikirWidgetProvider.refreshAll(this);
+            updateDzikirViews();
+        }), new LinearLayout.LayoutParams(0, WRAP, 1f));
+        LinearLayout.LayoutParams nextParams = new LinearLayout.LayoutParams(0, WRAP, 1f);
+        nextParams.leftMargin = dp(8);
+        controls.addView(secondaryButton("Bacaan berikutnya", () -> {
+            NativeDzikir.Counter current = NativeDzikir.load(this);
+            NativeDzikir.select(current, NativeDzikir.nextIndex(current.index));
+            NativeDzikir.save(this, current);
+            DzikirWidgetProvider.refreshAll(this);
+            renderTab("prayer");
+        }), nextParams);
+        body.addView(controls);
+        addGap(body, 12);
+
+        LinearLayout settings = card();
+        addKicker(settings, "PENGATURAN");
+        String[] targetLabels = new String[NativeDzikir.TARGET_CHOICES.length];
+        for (int i = 0; i < targetLabels.length; i++) targetLabels[i] = NativeDzikir.TARGET_CHOICES[i] + " kali";
+        dzikirTargetPicker = spinner(targetLabels);
+        dzikirTargetPicker.setOnItemSelectedListener(simpleItemListener(position -> {
+            NativeDzikir.Counter current = NativeDzikir.load(this);
+            NativeDzikir.setTarget(this, current.index, NativeDzikir.TARGET_CHOICES[position]);
+            DzikirWidgetProvider.refreshAll(this);
+            updateDzikirViews();
+        }));
+        settings.addView(labeled("Target untuk bacaan ini", dzikirTargetPicker));
+        Switch vibrate = editorSwitch("Getar setiap hitungan", NativeDzikir.vibrateEnabled(this));
+        vibrate.setOnCheckedChangeListener((button, checked) -> NativeDzikir.setVibrateEnabled(this, checked));
+        settings.addView(vibrate);
+        settings.addView(text("Tasbih setelah shalat (Subhanallah, Alhamdulillah, Allahu Akbar) pindah sendiri ke bacaan "
+                + "berikutnya setelah target tercapai. Bacaan lain tetap bisa dihitung melewati target.", 12, colorMuted(), false));
+        addGap(settings, 8);
+        settings.addView(secondaryButton("Tambah widget Tasbih ke layar utama",
+                () -> requestWidgetPin(DzikirWidgetProvider.class)));
+        body.addView(settings);
+        updateDzikirViews();
+    }
+
+    private void updateDzikirViews() {
+        if (dzikirCountView == null) return;
+        NativeDzikir.Counter counter = NativeDzikir.load(this);
+        NativeDzikir.Preset preset = NativeDzikir.PRESETS[counter.index];
+        int target = NativeDzikir.target(this, counter.index);
+        dzikirArabicView.setText(preset.arabic);
+        dzikirArabicView.setVisibility(preset.arabic.isEmpty() ? View.GONE : View.VISIBLE);
+        dzikirLatinView.setText(preset.latin);
+        dzikirMeaningView.setText(preset.meaning);
+        dzikirCountView.setText(String.valueOf(counter.count));
+        dzikirTargetView.setText(counter.count >= target ? "dari " + target + " ✓" : "dari " + target);
+        dzikirProgress.setMax(target);
+        dzikirProgress.setProgress(Math.min(target, counter.count));
+        dzikirTodayView.setText("Hari ini " + counter.today + " dzikir");
+        if (dzikirPresetPicker != null && dzikirPresetPicker.getSelectedItemPosition() != counter.index) {
+            dzikirPresetPicker.setSelection(counter.index);
+        }
+        if (dzikirTargetPicker != null) {
+            int selection = -1;
+            for (int i = 0; i < NativeDzikir.TARGET_CHOICES.length; i++) if (NativeDzikir.TARGET_CHOICES[i] == target) selection = i;
+            if (selection >= 0 && dzikirTargetPicker.getSelectedItemPosition() != selection) dzikirTargetPicker.setSelection(selection);
+        }
     }
 
     private void addPrayerRow(LinearLayout parent, String key, String label, String time, boolean next, boolean past, boolean ready) {
@@ -1971,6 +2156,24 @@ public final class NativeMainActivity extends Activity {
                 renderTab("prayer");
             }));
             reminder.addView(labeled("Bunyi saat masuk waktu", mode));
+            addGap(reminder, 8);
+            int[] beforeChoices = PrayerReminders.BEFORE_CHOICES;
+            String[] beforeLabels = new String[beforeChoices.length];
+            for (int i = 0; i < beforeChoices.length; i++) {
+                beforeLabels[i] = beforeChoices[i] == 0 ? "Mati" : beforeChoices[i] + " menit sebelumnya";
+            }
+            Spinner before = spinner(beforeLabels);
+            int beforeIndex = 0;
+            for (int i = 0; i < beforeChoices.length; i++) if (beforeChoices[i] == PrayerReminders.beforeMinutes(this)) beforeIndex = i;
+            before.setSelection(beforeIndex);
+            before.setOnItemSelectedListener(simpleItemListener(position -> {
+                if (beforeChoices[position] == PrayerReminders.beforeMinutes(this)) return;
+                PrayerReminders.setBeforeMinutes(this, beforeChoices[position]);
+                PrayerReminders.schedule(this);
+                toast(beforeChoices[position] == 0 ? "Pengingat sebelum shalat dimatikan."
+                        : "Pengingat " + beforeChoices[position] + " menit sebelum waktu shalat aktif.");
+            }));
+            reminder.addView(labeled("Pengingat sebelum waktu shalat", before));
             if (!ready) {
                 reminder.addView(text("Aktif setelah kota atau lokasi GPS dipilih.", 13, colorSecondary(), false));
             } else {
@@ -2136,7 +2339,7 @@ public final class NativeMainActivity extends Activity {
         });
         timerAlarm.addView(alarmEnabled);
         LinearLayout surfaceButtons = new LinearLayout(this);
-        surfaceButtons.addView(secondaryButton("Tambah widget", this::requestWidgetPin), new LinearLayout.LayoutParams(0, WRAP, 1f));
+        surfaceButtons.addView(secondaryButton("Tambah widget", this::showWidgetChooser), new LinearLayout.LayoutParams(0, WRAP, 1f));
         LinearLayout.LayoutParams chimeParams = new LinearLayout.LayoutParams(0, WRAP, 1f);
         chimeParams.leftMargin = dp(8);
         surfaceButtons.addView(secondaryButton("Tes suara timer", () -> {
@@ -2860,6 +3063,8 @@ public final class NativeMainActivity extends Activity {
     private void navigateBackInApp() {
         if ("quran".equals(currentTab) && quranReading) {
             showQuranIndex();
+        } else if ("prayer".equals(currentTab) && dzikirOpen) {
+            closeDzikir();
         } else {
             renderTab("home");
         }
@@ -4295,13 +4500,20 @@ public final class NativeMainActivity extends Activity {
         } catch (Exception exception) { toast("Gagal menyiapkan cadangan."); }
     }
 
-    private void requestWidgetPin() {
+    private void showWidgetChooser() {
+        String[] names = {"Rutinitas Hafalan · target hari ini", "Waktu Shalat · hitung mundur",
+                "Tasbih Dzikir · ketuk untuk menghitung"};
+        Class<?>[] providers = {RoutineWidgetProvider.class, PrayerWidgetProvider.class, DzikirWidgetProvider.class};
+        showOptionSheet("Pilih widget", names, null, -1, position -> requestWidgetPin(providers[position]));
+    }
+
+    private void requestWidgetPin(Class<?> providerClass) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             toast("Tekan lama layar utama, lalu pilih Widget → Rutinitas.");
             return;
         }
         AppWidgetManager manager = getSystemService(AppWidgetManager.class);
-        ComponentName provider = new ComponentName(this, RoutineWidgetProvider.class);
+        ComponentName provider = new ComponentName(this, providerClass);
         if (manager == null || !manager.isRequestPinAppWidgetSupported()) {
             toast("Widget tidak didukung launcher ini.");
         } else {

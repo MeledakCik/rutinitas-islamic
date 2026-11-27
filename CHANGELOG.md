@@ -3,6 +3,17 @@
 Semua perubahan penting pada aplikasi Rutinitas dicatat di sini.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/), dan penomoran versi mengikuti [Semantic Versioning](https://semver.org/lang/id/).
 
+## [1.3.0]
+
+### Ditambahkan
+- **Dzikir**: tasbih digital di tab Shalat. Pilih bacaan (Subhanallah, Alhamdulillah, Allahu Akbar, Astaghfirullah, La ilaha illallah, Shalawat, atau hitungan bebas), atur target 33/99/100/1000, dan lihat total dzikir hari ini. Urutan tasbih setelah shalat pindah sendiri ke bacaan berikutnya setelah 33 kali.
+- **Widget Tasbih**: ketuk widget untuk menambah hitungan dzikir tanpa membuka aplikasi, lengkap dengan tombol Ulangi dan Bacaan lain.
+- **Widget Waktu Shalat**: menampilkan shalat berikutnya, hitung mundurnya, dan jadwal lima waktu hari ini.
+- **Pengingat sebelum shalat**: notifikasi 5–30 menit sebelum waktu shalat masuk, diatur di tab Shalat › Pengingat adzan.
+
+### Diubah
+- Tombol *Tambah widget* di Setelan kini menawarkan pilihan widget Rutinitas Hafalan, Waktu Shalat, atau Tasbih Dzikir.
+
 ## [1.2.2]
 
 ### Ditambahkan

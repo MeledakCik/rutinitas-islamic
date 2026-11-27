@@ -6,6 +6,15 @@
     <string name="routine_widget_description">Ringkasan rutinitas dan target hafalan.</string>
     <string name="routine_widget_brand">RUTINITAS</string>
     <string name="routine_widget_title_default">Rutinitas</string>
+    <string name="dzikir_widget_name">Tasbih Dzikir</string>
+    <string name="dzikir_widget_description">Ketuk untuk menghitung dzikir tanpa membuka aplikasi.</string>
+    <string name="dzikir_widget_brand">TASBIH</string>
+    <string name="dzikir_widget_tap">Ketuk untuk menambah hitungan dzikir</string>
+    <string name="dzikir_widget_reset">Ulangi</string>
+    <string name="dzikir_widget_next">Bacaan lain</string>
+    <string name="prayer_widget_name">Waktu Shalat</string>
+    <string name="prayer_widget_description">Shalat berikutnya, sisa waktunya, dan jadwal hari ini.</string>
+    <string name="prayer_widget_kicker">SHALAT BERIKUTNYA</string>
     <string name="routine_widget_text_default">Buka untuk melihat rutinitas hari ini.</string>
     <string name="native_migration_status">Memeriksa data versi sebelumnya…</string>
     <string name="native_notification_setting">Notifikasi layar kunci</string>

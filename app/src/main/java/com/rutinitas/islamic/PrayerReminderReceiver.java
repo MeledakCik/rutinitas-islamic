@@ -15,7 +15,11 @@ public final class PrayerReminderReceiver extends BroadcastReceiver {
         if (PrayerReminders.ACTION_ADZAN.equals(action)) {
             PrayerReminders.notifyPrayer(context, intent.getStringExtra(PrayerReminders.EXTRA_KEY),
                     intent.getStringExtra(PrayerReminders.EXTRA_TIME), intent.getLongExtra(PrayerReminders.EXTRA_AT, 0L));
+        } else if (PrayerReminders.ACTION_BEFORE.equals(action)) {
+            PrayerReminders.notifyBefore(context, intent.getStringExtra(PrayerReminders.EXTRA_KEY),
+                    intent.getStringExtra(PrayerReminders.EXTRA_TIME), intent.getLongExtra(PrayerReminders.EXTRA_AT, 0L));
         }
+        // ACTION_WIDGET_REFRESH dan siaran sistem cukup menjadwalkan ulang; schedule() juga memperbarui widget.
         PrayerReminders.schedule(context);
     }
 }

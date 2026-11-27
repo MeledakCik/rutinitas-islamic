@@ -2,7 +2,7 @@
 
 Proyek Android Studio untuk aplikasi Rutinitas. Beranda, jadwal, hafalan, shalat, setelan, dan pembaca Al-Qur'an memakai tampilan Android native. Pembaca memakai teks Uthmani Tanzil dan metadata mushaf yang disimpan di APK, sehingga daftar surah, ayat, dan penanda tersedia offline.
 
-Target Sabaq dapat dipilih per Juz, seluruh mushaf, atau rentang halaman/ayat; progres berhenti tepat pada batas target. Android menyediakan pilihan notifikasi/layar kunci dan widget layar utama. Widget perlu ditambahkan dari pemilih widget launcher; layar kunci menampilkan aktivitas melalui notifikasi sesuai izin dan pengaturan privasi perangkat.
+Target Sabaq dapat dipilih per Juz, seluruh mushaf, atau rentang halaman/ayat; progres berhenti tepat pada batas target. Android menyediakan pilihan notifikasi/layar kunci dan tiga widget layar utama (Rutinitas Hafalan, Waktu Shalat, Tasbih Dzikir). Tab Shalat juga memuat tasbih digital dan pengingat beberapa menit sebelum waktu shalat. Widget perlu ditambahkan dari pemilih widget launcher; layar kunci menampilkan aktivitas melalui notifikasi sesuai izin dan pengaturan privasi perangkat.
 
 ## Buka dan jalankan
 

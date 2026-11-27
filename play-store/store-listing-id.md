@@ -14,8 +14,10 @@ Rutinitas membantu Anda:
 - Membaca teks Al-Qur'an Uthmani secara offline, memilih surah, melompat ke ayat, dan menyimpan bacaan terakhir serta penanda.
 - Mengatur progres hafalan Sabaq, Sabqi, dan Manzil.
 - Menggunakan hitung mundur aktivitas dan melihat statusnya di layar kunci.
-- Menambahkan widget layar utama untuk melihat aktivitas dan target terbaru.
+- Menambahkan widget layar utama: target hafalan, waktu salat berikutnya dengan hitung mundur, dan tasbih yang bisa diketuk langsung.
 - Menghitung jadwal waktu salat secara offline memakai lokasi perkiraan, koordinat manual, atau jadwal yang Anda masukkan sendiri.
+- Mendapat pengingat saat masuk waktu salat, serta pengingat beberapa menit sebelumnya bila diinginkan.
+- Menghitung dzikir dengan tasbih digital, termasuk urutan tasbih setelah salat.
 - Mencadangkan dan memulihkan jadwal melalui file JSON pilihan Anda.
 
 Lokasi hanya digunakan setelah Anda memilih sumber GPS dan memberikan izin. Jadwal, koordinat, dan progres tersimpan di perangkat. Rutinitas tidak memakai akun, iklan, analitik, atau server.
