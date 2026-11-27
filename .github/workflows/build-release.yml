@@ -57,43 +57,45 @@ jobs:
           node tests/test_surah_names.js
           node tests/test_lockscreen_preview.js
 
-      - name: Siapkan kunci tanda tangan (jika ada)
-        id: signing
+      - name: Siapkan kunci tanda tangan rilis
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          if [ -n "$KEYSTORE_BASE64" ]; then
-            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.keystore"
-            {
-              echo "storeFile=$RUNNER_TEMP/upload.keystore"
-              echo "storePassword=$KEYSTORE_PASSWORD"
-              echo "keyAlias=$KEY_ALIAS"
-              echo "keyPassword=$KEY_PASSWORD"
-            } > keystore.properties
-            echo "signed=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "signed=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::Secret KEYSTORE_BASE64 belum diisi; yang dibuat APK debug."
-          fi
+          for name in KEYSTORE_BASE64 KEYSTORE_PASSWORD KEY_ALIAS KEY_PASSWORD; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Secret $name belum diisi di Settings > Secrets and variables > Actions. Build rilis butuh upload key."
+              exit 1
+            fi
+          done
+          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.keystore"
+          {
+            echo "storeFile=$RUNNER_TEMP/upload.keystore"
+            echo "storePassword=$KEYSTORE_PASSWORD"
+            echo "keyAlias=$KEY_ALIAS"
+            echo "keyPassword=$KEY_PASSWORD"
+          } > keystore.properties
 
-      - name: Unit test & build APK/AAB
+      - name: Unit test & build rilis (AAB + APK)
         run: |
           chmod +x gradlew
           out="dist/Rutinitas-${{ steps.version.outputs.tag }}"
           mkdir -p dist
-          code="-PversionCodeOverride=${{ steps.version.outputs.code }}"
-          if [ "${{ steps.signing.outputs.signed }}" = "true" ]; then
-            ./gradlew --no-daemon "$code" :app:testDebugUnitTest :app:assembleRelease :app:bundleRelease
-            cp app/build/outputs/apk/release/app-release.apk "$out.apk"
-            cp app/build/outputs/bundle/release/app-release.aab "$out.aab"
-          else
-            ./gradlew --no-daemon "$code" :app:testDebugUnitTest :app:assembleDebug
-            cp app/build/outputs/apk/debug/app-debug.apk "$out-debug.apk"
-          fi
-          rm -f keystore.properties
+          ./gradlew --no-daemon "-PversionCodeOverride=${{ steps.version.outputs.code }}"             :app:testDebugUnitTest :app:assembleRelease :app:bundleRelease
+          cp app/build/outputs/apk/release/app-release.apk "$out.apk"
+          cp app/build/outputs/bundle/release/app-release.aab "$out.aab"
+
+      - name: Periksa tanda tangan rilis
+        run: |
+          jarsigner -verify "dist/Rutinitas-${{ steps.version.outputs.tag }}.aab" | grep -q "jar verified"
+          apksigner=$(ls -d "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
+          "$apksigner" verify --print-certs "dist/Rutinitas-${{ steps.version.outputs.tag }}.apk" | grep -q "Signer #1"
+
+      - name: Hapus kunci dari runner
+        if: always()
+        run: rm -f keystore.properties "$RUNNER_TEMP/upload.keystore"
 
       - name: Simpan hasil build sebagai artifact
         uses: actions/upload-artifact@v4
@@ -108,9 +110,13 @@ jobs:
           tag_name: ${{ steps.version.outputs.tag }}
           target_commitish: ${{ github.sha }}
           name: Rutinitas ${{ steps.version.outputs.name }} (build ${{ github.run_number }})
+          draft: true
           body: |
-            Build otomatis dari commit ${{ github.sha }} · versionCode ${{ steps.version.outputs.code }}.
-            ${{ steps.signing.outputs.signed == 'true' && 'AAB (untuk Play Console) dan APK rilis bertanda tangan upload key.' || 'APK debug: secret kunci belum diisi, belum bisa diunggah ke Play Store.' }}
+            Build rilis otomatis dari commit ${{ github.sha }} · versionCode ${{ steps.version.outputs.code }}.
+            - `.aab`: unggah ke Play Console.
+            - `.apk`: build rilis yang sama untuk dicoba di HP sebelum publish.
+
+            Draft: cek dulu APK-nya, lalu klik Publish release bila sudah oke.
 
             ${{ github.event.head_commit.message }}
           files: dist/*
