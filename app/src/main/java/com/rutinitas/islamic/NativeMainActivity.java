@@ -152,6 +152,7 @@ public final class NativeMainActivity extends Activity {
     private TextView prayerLineView;
     private TextView timerView;
     private TextView timerLabelView;
+    private final java.util.Set<String> openSections = new java.util.HashSet<>();
     private String currentTab = "home";
     private boolean showManzilList;
     private int lastCheckedDay = -1;
@@ -699,92 +700,82 @@ public final class NativeMainActivity extends Activity {
                 .getBoolean("show_data_import", !stateStore.hasStoredState());
         boolean hifzSessionComplete = todayString().equals(state.optString("completedDate", ""))
                 && contains(state.optJSONArray("completedBlocksToday"), "primary_hifz");
-        renderDailyProgress();
-        addGap(body, 16);
         if (showMigrationCard) {
             LinearLayout importCard = card();
             importCard.addView(text("Punya data dari versi lama?", 15, colorPrimary(), true));
             importCard.addView(secondaryButton("Pindahkan data", R.drawable.ic_upload, this::showMigrationOptions));
             body.addView(importCard);
-            addGap(body, 20);
+            addGap(body, 12);
         }
-
-        addKicker(body, "FOKUS HARI INI");
-        TextView title = text("Hafalan Al-Qur’an Subuh", 30, colorPrimary(), true);
-        title.setLetterSpacing(-0.035f);
-        body.addView(title);
-        addGap(body, 12);
-
-        LinearLayout status = new LinearLayout(this);
-        status.setGravity(Gravity.CENTER_VERTICAL);
-        TextView badge = pill(hifzSessionComplete ? "SESI SELESAI" : "SESI HAFALAN",
-                colorAccentSoft(), colorAccentText());
-        status.addView(badge, new LinearLayout.LayoutParams(WRAP, WRAP));
-        TextView window = text("90 MENIT · SUBUH", 11, colorMuted(), true);
-        window.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
-        status.addView(window, new LinearLayout.LayoutParams(0, WRAP, 1f));
-        body.addView(status);
-        addGap(body, 10);
 
         JSONObject hifzPlan = getNativeHifzPlan();
         int stepCount = Math.max(1, hifzPlan == null ? 3 : hifzPlan.optInt("totalSteps", 3));
         int step = Math.max(0, Math.min(stepCount - 1, state.optInt("primarySubStep", 0)));
+
+        LinearLayout focus = card();
+        LinearLayout focusHeader = new LinearLayout(this);
+        focusHeader.setGravity(Gravity.CENTER_VERTICAL);
+        focusHeader.addView(text("Hafalan Subuh", 13, colorAccentText(), true), new LinearLayout.LayoutParams(0, WRAP, 1f));
+        focusHeader.addView(text(hifzSessionComplete ? "Selesai"
+                : "Langkah " + (step + 1) + "/" + stepCount, 12, colorMuted(), true));
+        focus.addView(focusHeader);
+
         LinearLayout steps = new LinearLayout(this);
         for (int i = 0; i < stepCount; i++) {
             View segment = new View(this);
             int segmentColor = hifzSessionComplete || i <= step ? colorAccent() : colorBorder();
-            segment.setBackground(rounded(segmentColor, segmentColor, dp(3), 0));
-            LinearLayout.LayoutParams segmentParams = new LinearLayout.LayoutParams(0, dp(5), 1f);
-            if (i > 0) segmentParams.leftMargin = dp(5);
+            segment.setBackground(rounded(segmentColor, segmentColor, dp(2), 0));
+            LinearLayout.LayoutParams segmentParams = new LinearLayout.LayoutParams(0, dp(4), 1f);
+            if (i > 0) segmentParams.leftMargin = dp(4);
             steps.addView(segment, segmentParams);
         }
-        body.addView(steps);
-        addGap(body, 10);
+        focus.addView(steps);
 
-        LinearLayout targetCard = card();
         if (hifzSessionComplete) {
-            addKicker(targetCard, "HAFALAN HARI INI TUNTAS");
-            targetCard.addView(text("Semua langkah sudah selesai", 19, colorPrimary(), true));
-            addGap(targetCard, 6);
-            targetCard.addView(text("Progres tersimpan. Sesi berikutnya dimulai besok.", 13, colorSecondary(), false));
-            body.addView(targetCard);
+            focus.addView(text("Hafalan hari ini tuntas", 20, colorPrimary(), true));
+            focus.addView(text("Progres tersimpan. Sesi berikutnya dimulai besok.", 13, colorSecondary(), false));
+            body.addView(focus);
+            addGap(body, 12);
+            renderDailyProgress();
             return;
         }
 
-        String stepLabel = hifzStepLabel(hifzPlan, step);
-        addKicker(targetCard, stepLabel);
-        TextView target = text(currentHifzTarget(), 19, colorPrimary(), true);
+        focus.addView(text(hifzStepLabel(hifzPlan, step), 12, colorMuted(), true));
+        TextView target = text(currentHifzTarget(), 18, colorPrimary(), true);
         target.setLineSpacing(dp(3), 1f);
-        targetCard.addView(target);
-        addGap(targetCard, 6);
-        targetCard.addView(text(stepCue(step), 13, colorSecondary(), false));
-        body.addView(targetCard);
-        addGap(body, 12);
+        focus.addView(target);
+        focus.addView(text(stepCue(step), 13, colorSecondary(), false));
 
-        LinearLayout timerCard = card();
-        LinearLayout timerHeader = new LinearLayout(this);
-        timerHeader.setGravity(Gravity.CENTER_VERTICAL);
-        timerLabelView = text("WAKTU LANGKAH", 11, colorMuted(), true);
-        timerHeader.addView(timerLabelView, new LinearLayout.LayoutParams(0, WRAP, 1f));
-        timerCard.addView(timerHeader);
-        timerView = text(formatSeconds(timerRemaining()), 42, colorPrimary(), true);
+        LinearLayout timerRow = new LinearLayout(this);
+        timerRow.setGravity(Gravity.CENTER_VERTICAL);
+        timerRow.setPadding(dp(14), dp(10), dp(14), dp(10));
+        timerRow.setBackground(rounded(colorSubtle(), colorSubtle(), dp(12), 0));
+        timerLabelView = text(timerIsRunning() ? "SESI BERJALAN" : "WAKTU LANGKAH", 11, colorMuted(), true);
+        timerRow.addView(timerLabelView, new LinearLayout.LayoutParams(0, WRAP, 1f));
+        timerView = text(formatSeconds(timerRemaining()), 30, colorPrimary(), true);
         timerView.setTypeface(monoTypeface(), Typeface.BOLD);
-        timerCard.addView(timerView);
-        body.addView(timerCard);
-        addGap(body, 12);
+        timerRow.addView(timerView);
+        focus.addView(timerRow);
 
-        String timerAction = timerIsRunning() ? "Jeda timer"
-                : (timerHasRecord() && timerRemaining() > 0 ? "Lanjutkan sesi" : "Mulai langkah");
-        body.addView(actionButton(timerAction,
+        String timerAction = timerIsRunning() ? "Jeda"
+                : (timerHasRecord() && timerRemaining() > 0 ? "Lanjutkan" : "Mulai");
+        LinearLayout actions = new LinearLayout(this);
+        actions.addView(actionButton(timerAction,
                 timerIsRunning() ? R.drawable.ic_pause : R.drawable.ic_play, () -> {
             if (timerIsRunning()) pauseTimer(); else startOrResumeTimer();
             renderTab("home");
-        }));
-        addGap(body, 12);
-        body.addView(secondaryButton(step < stepCount - 1 ? "Tandai langkah selesai" : "Selesaikan sesi hari ini", () -> {
+        }), new LinearLayout.LayoutParams(0, WRAP, 1f));
+        LinearLayout.LayoutParams doneParams = new LinearLayout.LayoutParams(0, WRAP, 1f);
+        doneParams.leftMargin = dp(8);
+        actions.addView(secondaryButton(step < stepCount - 1 ? "Langkah selesai" : "Selesaikan sesi",
+                R.drawable.ic_check, () -> {
             completeCurrentStep();
             renderTab("home");
-        }));
+        }), doneParams);
+        focus.addView(actions);
+        body.addView(focus);
+        addGap(body, 12);
+        renderDailyProgress();
     }
 
     private void renderDailyProgress() {
@@ -803,13 +794,26 @@ public final class NativeMainActivity extends Activity {
         }
         if (total == 0) return;
         LinearLayout progress = card();
-        progress.addView(text(new java.text.SimpleDateFormat("EEEE, d MMMM", new Locale("id", "ID")).format(new Date()),
-                12, colorAccentText(), true));
-        addGap(progress, 6);
-        progress.addView(text("Rutinitas hari ini", 22, colorPrimary(), true));
-        addGap(progress, 6);
-        progress.addView(text(completed + " dari " + total + " aktivitas selesai", 14, colorSecondary(), false));
-        addGap(progress, 10);
+        progress.setClickable(true);
+        progress.setFocusable(true);
+        progress.setForeground(rippleShape(dp(16)));
+        progress.setOnClickListener(view -> renderTab("schedule"));
+        progress.setContentDescription("Rutinitas hari ini, " + completed + " dari " + total
+                + " selesai. Ketuk untuk membuka jadwal.");
+        LinearLayout heading = new LinearLayout(this);
+        heading.setGravity(Gravity.CENTER_VERTICAL);
+        LinearLayout labels = new LinearLayout(this);
+        labels.setOrientation(LinearLayout.VERTICAL);
+        labels.addView(text("Rutinitas hari ini", 15, colorPrimary(), true));
+        TextView date = text(new java.text.SimpleDateFormat("EEEE, d MMMM", new Locale("id", "ID")).format(new Date()),
+                12, colorMuted(), false);
+        date.setPadding(0, dp(3), 0, 0);
+        labels.addView(date);
+        heading.addView(labels, new LinearLayout.LayoutParams(0, WRAP, 1f));
+        TextView count = text(completed + "/" + total, 18, colorAccentText(), true);
+        count.setTypeface(monoTypeface(), Typeface.BOLD);
+        heading.addView(count);
+        progress.addView(heading);
         android.widget.ProgressBar meter = new android.widget.ProgressBar(this, null,
                 android.R.attr.progressBarStyleHorizontal);
         meter.setMax(total);
@@ -818,60 +822,72 @@ public final class NativeMainActivity extends Activity {
         meter.setProgressBackgroundTintList(ColorStateList.valueOf(colorBorder()));
         meter.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
         progress.addView(meter, new LinearLayout.LayoutParams(MATCH, dp(6)));
-        progress.addView(secondaryButton("Buka jadwal hari ini", () -> renderTab("schedule")));
         body.addView(progress);
     }
 
     private void renderSchedule() {
-        renderPageHeading("Jadwal", "Rutinitas hari ini dan evaluasi malam.");
+        renderPageHeading("Jadwal", "Agenda hari ini");
         renderDailyAgenda();
         addGap(body, 12);
         renderGateActions();
         addGap(body, 12);
-        addProfilePicker();
-        addGap(body, 10);
         JSONArray routines = state.optJSONArray("customRoutines");
-        if (routines == null || routines.length() == 0) {
-            LinearLayout empty = card();
-            empty.addView(text("Belum ada aktivitas tambahan di profil ini.", 14, colorSecondary(), false));
-            body.addView(empty);
-        } else {
-            for (int i = 0; i < routines.length(); i++) {
-                JSONObject routine = routines.optJSONObject(i);
-                if (routine == null) continue;
-                LinearLayout item = card();
-                item.addView(text(routine.optString("title", "Aktivitas"), 16, colorPrimary(), true));
-                addGap(item, 4);
-                item.addView(text(routine.optString("protocol", ""), 13, colorSecondary(), false));
-                addGap(item, 4);
-                item.addView(text(routineAnchorLabel(routine), 12, colorMuted(), true));
-                LinearLayout controls = new LinearLayout(this);
-                controls.setGravity(Gravity.CENTER_VERTICAL);
-                Button toggle = smallButton(routine.optBoolean("enabled", true) ? "Aktif" : "Jeda");
-                toggle.setOnClickListener(view -> toggleRoutine(routine));
-                controls.addView(toggle);
-                Button edit = smallButton("Ubah");
-                LinearLayout.LayoutParams editParams = new LinearLayout.LayoutParams(WRAP, WRAP);
-                editParams.leftMargin = dp(6);
-                controls.addView(edit, editParams);
-                edit.setOnClickListener(view -> showRoutineEditor(routine));
-                Button remove = smallButton("Hapus");
-                remove.setOnClickListener(view -> confirmDeleteRoutine(routine));
-                LinearLayout.LayoutParams removeParams = new LinearLayout.LayoutParams(WRAP, WRAP);
-                removeParams.leftMargin = dp(6);
-                controls.addView(remove, removeParams);
-                item.addView(controls);
-                addGap(body, 8);
-                body.addView(item);
+        int routineCount = routines == null ? 0 : routines.length();
+        String activeProfile = state.optString("activeRoutineProfileId", "profile_1").replace("profile_", "Profil ");
+        body.addView(collapsible("schedule_routines", "Kelola aktivitas",
+                activeProfile + " · " + routineCount + " aktivitas tambahan", panel -> {
+            addProfilePicker(panel);
+            if (routineCount == 0) {
+                panel.addView(text("Belum ada aktivitas tambahan di profil ini.", 13, colorSecondary(), false));
+            } else {
+                for (int i = 0; i < routines.length(); i++) {
+                    JSONObject routine = routines.optJSONObject(i);
+                    if (routine != null) addRoutineRow(panel, routine);
+                }
             }
-        }
-        addGap(body, 10);
-        body.addView(actionButton("Tambah aktivitas", R.drawable.ic_add, () -> showRoutineEditor(null)));
+            addGap(panel, 4);
+            panel.addView(actionButton("Tambah aktivitas", R.drawable.ic_add, () -> showRoutineEditor(null)));
+        }));
+    }
+
+    private void addRoutineRow(LinearLayout parent, JSONObject routine) {
+        View divider = new View(this);
+        divider.setBackgroundColor(colorBorder());
+        LinearLayout.LayoutParams dividerParams = new LinearLayout.LayoutParams(MATCH, dp(1));
+        dividerParams.topMargin = dp(10);
+        parent.addView(divider, dividerParams);
+        LinearLayout row = new LinearLayout(this);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setPadding(0, dp(10), 0, 0);
+        boolean enabled = routine.optBoolean("enabled", true);
+        LinearLayout labels = new LinearLayout(this);
+        labels.setOrientation(LinearLayout.VERTICAL);
+        labels.setClickable(true);
+        labels.setBackground(rippleShape(dp(10)));
+        labels.setOnClickListener(view -> showRoutineEditor(routine));
+        labels.setContentDescription("Ubah " + routine.optString("title", "Aktivitas"));
+        labels.addView(text(routine.optString("title", "Aktivitas"), 15, enabled ? colorPrimary() : colorMuted(), true));
+        TextView anchor = text(routineAnchorLabel(routine) + (enabled ? "" : " · dijeda"), 12, colorMuted(), false);
+        anchor.setPadding(0, dp(3), 0, 0);
+        labels.addView(anchor);
+        row.addView(labels, new LinearLayout.LayoutParams(0, WRAP, 1f));
+        Switch toggle = new Switch(this);
+        toggle.setChecked(enabled);
+        styleSwitch(toggle);
+        toggle.setContentDescription(routine.optString("title", "Aktivitas") + " aktif");
+        toggle.setOnCheckedChangeListener((button, checked) -> toggleRoutine(routine));
+        row.addView(toggle, new LinearLayout.LayoutParams(WRAP, WRAP));
+        Button remove = smallButton("Hapus");
+        remove.setOnClickListener(view -> confirmDeleteRoutine(routine));
+        LinearLayout.LayoutParams removeParams = new LinearLayout.LayoutParams(WRAP, WRAP);
+        removeParams.leftMargin = dp(6);
+        row.addView(remove, removeParams);
+        parent.addView(row);
     }
 
     private void renderDailyAgenda() {
         LinearLayout agenda = card();
-        addKicker(agenda, "AGENDA · " + new java.text.SimpleDateFormat("EEEE, d MMM", new Locale("id", "ID"))
+        addKicker(agenda, new java.text.SimpleDateFormat("EEEE, d MMM", new Locale("id", "ID"))
                 .format(new Date()).toUpperCase(new Locale("id", "ID")));
         JSONObject schedule;
         try {
@@ -897,24 +913,28 @@ public final class NativeMainActivity extends Activity {
                 row.addView(time, new LinearLayout.LayoutParams(dp(54), WRAP));
                 LinearLayout details = new LinearLayout(this);
                 details.setOrientation(LinearLayout.VERTICAL);
+                boolean done = block.optBoolean("isCompleted", false);
                 String title = block.optString("title", "Aktivitas");
-                if (block.optBoolean("isCompleted", false)) title += " · selesai";
-                details.addView(text(title, 14, colorPrimary(), true));
-                addGap(details, 4);
-                String secondary = block.optString("start", "") + "–" + block.optString("end", "")
-                        + "   ·   " + Math.max(0, block.optInt("effectiveDurationMins", block.optInt("durationMins", 0))) + " mnt";
-                if (block.optInt("shiftMins", 0) > 0) secondary += "   ·   bergeser " + block.optInt("shiftMins") + " mnt";
-                if (block.optInt("compressedFromMins", 0) > 0) secondary += "   ·   dipadatkan dari " + block.optInt("compressedFromMins") + " mnt";
-                details.addView(text(secondary, 11, colorMuted(), false));
-                if (block.optString("protocol", "").trim().length() > 0) {
-                    addGap(details, 4);
-                    details.addView(text(block.optString("protocol"), 12, colorSecondary(), false));
+                if (done) title = "✓ " + title;
+                details.addView(text(title, 14, done ? colorMuted() : colorPrimary(), true));
+                addGap(details, 3);
+                String secondary = "s.d. " + block.optString("end", "") + " · "
+                        + Math.max(0, block.optInt("effectiveDurationMins", block.optInt("durationMins", 0))) + " mnt";
+                if (block.optInt("shiftMins", 0) > 0) secondary += " · geser " + block.optInt("shiftMins") + " mnt";
+                if (block.optInt("compressedFromMins", 0) > 0) secondary += " · dipadatkan";
+                details.addView(text(secondary, 12, colorMuted(), false));
+                if (!done && block.optString("protocol", "").trim().length() > 0) {
+                    addGap(details, 3);
+                    TextView protocol = text(block.optString("protocol"), 12, colorSecondary(), false);
+                    protocol.setMaxLines(2);
+                    protocol.setEllipsize(TextUtils.TruncateAt.END);
+                    details.addView(protocol);
                 }
                 row.addView(details, new LinearLayout.LayoutParams(0, WRAP, 1f));
                 agenda.addView(row);
                 String blockId = block.optString("id", "");
                 if ("primary_hifz".equals(blockId)) {
-                    Button openHifz = smallButton("Buka fokus");
+                    Button openHifz = smallButton("Buka di Beranda");
                     LinearLayout.LayoutParams actionParams = new LinearLayout.LayoutParams(WRAP, WRAP);
                     actionParams.leftMargin = dp(54);
                     openHifz.setOnClickListener(view -> renderTab("home"));
@@ -924,7 +944,7 @@ public final class NativeMainActivity extends Activity {
                     actions.setGravity(Gravity.CENTER_VERTICAL);
                     actions.setPadding(dp(54), dp(5), 0, 0);
                     if (block.optBoolean("isCompleted", false)) {
-                        Button undo = smallButton("Batalkan selesai");
+                        Button undo = smallButton("Batalkan");
                         undo.setOnClickListener(view -> undoAgendaBlock(blockId));
                         actions.addView(undo);
                     } else {
@@ -932,7 +952,7 @@ public final class NativeMainActivity extends Activity {
                         boolean running = agendaTimerRunning(blockId);
                         String policy = block.optString("conflictPolicy", "strict");
                         if ("shift".equals(policy) || "hifz".equals(block.optString("layer"))) {
-                            Button timerAction = smallButton(running ? "Jeda" : (hasTimer ? "Lanjutkan" : "Mulai timer"));
+                            Button timerAction = smallButton(running ? "Jeda" : (hasTimer ? "Lanjutkan" : "Mulai"));
                             timerAction.setOnClickListener(view -> {
                                 if (running) pauseAgendaTimer(blockId); else startAgendaTimer(block);
                                 renderTab("schedule");
@@ -995,7 +1015,7 @@ public final class NativeMainActivity extends Activity {
 
     private void renderGateActions() {
         LinearLayout gate = card();
-        addKicker(gate, "EVALUASI SEBELUM TIDUR · 21:15–22:00");
+        addKicker(gate, "EVALUASI MALAM · 21:15–22:00");
         String result = state.optString("gateResultToday", "");
         if ("passed".equals(result)) {
             gate.addView(text("Evaluasi lulus · target hari berikutnya sudah disiapkan.", 14, colorPrimary(), true));
@@ -1004,7 +1024,7 @@ public final class NativeMainActivity extends Activity {
         } else if ("failed".equals(result)) {
             gate.addView(text("Evaluasi belum lulus. Target Sabaq tidak dimajukan.", 14, colorPrimary(), true));
         } else {
-            gate.addView(text("Tinjau hafalan hari ini untuk menentukan target Sabaq berikutnya.", 13, colorSecondary(), false));
+            gate.addView(text("Tentukan apakah target Sabaq maju besok.", 13, colorSecondary(), false));
         }
         JSONArray undo = state.optJSONArray("undoStack");
         JSONObject latestUndo = undo == null || undo.length() == 0 ? null : undo.optJSONObject(undo.length() - 1);
@@ -1029,7 +1049,7 @@ public final class NativeMainActivity extends Activity {
                 gate.addView(choices);
             } else {
                 addGap(gate, 4);
-                gate.addView(text("Pilihan evaluasi tersedia setelah pukul 21:15.", 12, colorMuted(), false));
+                gate.addView(text("Tersedia mulai pukul 21:15.", 12, colorMuted(), false));
             }
         }
         body.addView(gate);
@@ -1394,76 +1414,99 @@ public final class NativeMainActivity extends Activity {
     private void renderHifz() {
         JSONObject sabaq = state.optJSONObject("sabaq");
         if (sabaq == null) sabaq = new JSONObject();
-        renderPageHeading("Siklus hafalan", "Target Sabaq dan daftar murajaah.");
+        renderPageHeading("Hafalan", "Target dan murajaah");
 
         LinearLayout phaseCard = card();
         JSONObject nativePlan = getNativeHifzPlan();
         int phase = nativePlan == null ? state.optInt("hifzPhase", 3) : nativePlan.optInt("phase", state.optInt("hifzPhase", 3));
-        phaseCard.addView(text(phase == 4 ? "FASE 4 · MANZIL JUZ" : "FASE 3 · PEMULIHAN & PENGUATAN",
-                12, colorAccentText(), true));
-        addGap(phaseCard, 4);
-        phaseCard.addView(text("Hari " + Math.max(1, state.optInt("phaseDay", 1)), 21, colorPrimary(), true));
-        addGap(phaseCard, 4);
-        phaseCard.addView(text("Target berjalan di halaman " + sabaq.optInt("currentPage", 1)
-                + " dari 604", 13, colorSecondary(), false));
+        LinearLayout phaseHeader = new LinearLayout(this);
+        phaseHeader.setGravity(Gravity.CENTER_VERTICAL);
+        phaseHeader.addView(text(phase == 4 ? "Fase 4 · Manzil Juz" : "Fase 3 · Pemulihan", 13, colorAccentText(), true),
+                new LinearLayout.LayoutParams(0, WRAP, 1f));
+        phaseHeader.addView(text("Hari " + Math.max(1, state.optInt("phaseDay", 1)), 13, colorMuted(), true));
+        phaseCard.addView(phaseHeader);
+        phaseCard.addView(text(currentSabaqUnitFullLabel(sabaq), 17, colorPrimary(), true));
+        android.widget.ProgressBar mushaf = new android.widget.ProgressBar(this, null,
+                android.R.attr.progressBarStyleHorizontal);
+        mushaf.setMax(604);
+        mushaf.setProgress(Math.max(0, Math.min(604, sabaq.optInt("currentPage", 1))));
+        mushaf.setProgressTintList(ColorStateList.valueOf(colorAccent()));
+        mushaf.setProgressBackgroundTintList(ColorStateList.valueOf(colorBorder()));
+        mushaf.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        phaseCard.addView(mushaf, new LinearLayout.LayoutParams(MATCH, dp(6)));
+        phaseCard.addView(text("Halaman " + sabaq.optInt("currentPage", 1) + " dari 604"
+                + (state.optBoolean("sabaqFrozen", false) ? " · Sabaq dijeda" : ""), 12, colorMuted(), false));
         body.addView(phaseCard);
-        addGap(body, 16);
+        addGap(body, 12);
 
         LinearLayout review = card();
         renderHifzReview(review);
         body.addView(review);
-        addGap(body, 16);
+        addGap(body, 12);
 
-        LinearLayout paceCard = card();
-        addKicker(paceCard, "PORSI MANZIL HARIAN");
-        if (phase == 4) {
-            Spinner pace = spinner(new String[]{"1 Juz per hari", "2 Juz per hari"});
-            pace.setSelection(Math.max(0, Math.min(1, state.optInt("HighVolumeJuzPerDay", 1) - 1)));
-            pace.setOnItemSelectedListener(simpleItemListener(position -> {
-                stateSafePut("HighVolumeJuzPerDay", position + 1);
-                persistState();
-                if (showManzilList) renderHifzReview(review);
-            }));
-            paceCard.addView(labeled("Porsi harian fase 4", pace));
-            Switch maghrib = editorSwitch("Tambahkan sesi Maghrib", state.optBoolean("HighVolumeMaghribOn", false));
-            maghrib.setOnCheckedChangeListener((button, checked) -> {
-                stateSafePut("HighVolumeMaghribOn", checked);
-                persistState();
-                if (showManzilList) renderHifzReview(review);
-            });
-            paceCard.addView(maghrib);
-        } else {
-            Spinner pace = spinner(new String[]{"10 halaman per hari", "20 halaman per hari"});
-            pace.setSelection(state.optInt("lvPace", 10) == 20 ? 1 : 0);
-            pace.setOnItemSelectedListener(simpleItemListener(position -> {
-                stateSafePut("lvPace", position == 1 ? 20 : 10);
-                persistState();
-                if (showManzilList) renderHifzReview(review);
-            }));
-            paceCard.addView(labeled("Porsi harian fase 3", pace));
-            Switch maghrib = editorSwitch("Tambahkan sesi Maghrib", state.optBoolean("lvMaghribEnabled", false));
-            maghrib.setOnCheckedChangeListener((button, checked) -> {
-                stateSafePut("lvMaghribEnabled", checked);
-                if (!checked) stateSafePut("lvPace", 10);
-                persistState();
-                if (showManzilList) renderHifzReview(review);
-            });
-            paceCard.addView(maghrib);
+        final JSONObject sabaqTarget = sabaq;
+        body.addView(collapsible("hifz_target", "Atur target Sabaq",
+                SABAQ_MODE_LABELS[Math.max(0, indexOf(SABAQ_MODE_KEYS, sabaq.optString("mode", "half_page")))],
+                target -> renderSabaqTargetSettings(target, sabaqTarget)));
+        addGap(body, 12);
+
+        String paceSummary = phase == 4
+                ? Math.max(1, Math.min(2, state.optInt("HighVolumeJuzPerDay", 1))) + " Juz per hari"
+                : (state.optInt("lvPace", 10) == 20 ? 20 : 10) + " halaman per hari";
+        body.addView(collapsible("hifz_pace", "Atur porsi Manzil", paceSummary, paceCard -> {
+            if (phase == 4) {
+                Spinner pace = spinner(new String[]{"1 Juz per hari", "2 Juz per hari"});
+                pace.setSelection(Math.max(0, Math.min(1, state.optInt("HighVolumeJuzPerDay", 1) - 1)));
+                pace.setOnItemSelectedListener(simpleItemListener(position -> {
+                    stateSafePut("HighVolumeJuzPerDay", position + 1);
+                    persistState();
+                    if (showManzilList) renderHifzReview(review);
+                }));
+                paceCard.addView(labeled("Porsi harian", pace));
+                Switch maghrib = editorSwitch("Tambahkan sesi Maghrib", state.optBoolean("HighVolumeMaghribOn", false));
+                maghrib.setOnCheckedChangeListener((button, checked) -> {
+                    stateSafePut("HighVolumeMaghribOn", checked);
+                    persistState();
+                    if (showManzilList) renderHifzReview(review);
+                });
+                paceCard.addView(maghrib);
+            } else {
+                Spinner pace = spinner(new String[]{"10 halaman per hari", "20 halaman per hari"});
+                pace.setSelection(state.optInt("lvPace", 10) == 20 ? 1 : 0);
+                pace.setOnItemSelectedListener(simpleItemListener(position -> {
+                    stateSafePut("lvPace", position == 1 ? 20 : 10);
+                    persistState();
+                    if (showManzilList) renderHifzReview(review);
+                }));
+                paceCard.addView(labeled("Porsi harian", pace));
+                Switch maghrib = editorSwitch("Tambahkan sesi Maghrib", state.optBoolean("lvMaghribEnabled", false));
+                maghrib.setOnCheckedChangeListener((button, checked) -> {
+                    stateSafePut("lvMaghribEnabled", checked);
+                    if (!checked) stateSafePut("lvPace", 10);
+                    persistState();
+                    if (showManzilList) renderHifzReview(review);
+                });
+                paceCard.addView(maghrib);
+            }
+            paceCard.addView(secondaryButton("Atur Juz hafalan sebelumnya", this::showPriorJuzDialog));
+        }));
+        addGap(body, 12);
+        body.addView(secondaryButton(state.optBoolean("sabaqFrozen", false)
+                ? "Lanjutkan Sabaq" : "Hentikan Sabaq sementara", this::toggleSabaqFreeze));
+        JSONArray undo = state.optJSONArray("undoStack");
+        JSONObject latestUndo = undo == null || undo.length() == 0 ? null : undo.optJSONObject(undo.length() - 1);
+        if (isUndoableNativeAction(latestUndo)) {
+            addGap(body, 8);
+            body.addView(secondaryButton("Urungkan perubahan terakhir", this::undoGateDecision));
         }
-        addGap(paceCard, 8);
-        paceCard.addView(secondaryButton("Atur Juz hafalan sebelumnya", this::showPriorJuzDialog));
-        body.addView(paceCard);
-        addGap(body, 16);
+    }
 
-        LinearLayout target = card();
-        addKicker(target, "TARGET SABAQ");
+    private void renderSabaqTargetSettings(LinearLayout target, JSONObject sabaq) {
         Spinner juzPreset = spinner(getSabaqPresetLabels());
         juzPreset.setSelection(Math.max(0, Math.min(30, sabaq.optInt("targetJuz", 0))));
         juzPreset.setOnItemSelectedListener(simpleItemListener(this::applySabaqPreset));
         target.addView(labeled("Cakupan mushaf", juzPreset));
         addGap(target, 6);
-        target.addView(text(currentSabaqUnitFullLabel(sabaq), 16, colorPrimary(), true));
-        addGap(target, 8);
         Spinner modePicker = spinner(SABAQ_MODE_LABELS);
         modePicker.setSelection(indexOf(SABAQ_MODE_KEYS, sabaq.optString("mode", "half_page")));
         modePicker.setOnItemSelectedListener(simpleItemListener(position -> setSabaqMode(SABAQ_MODE_KEYS[position])));
@@ -1477,15 +1520,12 @@ public final class NativeMainActivity extends Activity {
             addGap(target, 6);
             target.addView(secondaryButton("Atur rentang ayat dan porsi harian", this::showAyahTargetDialog));
         }
-        addGap(target, 12);
         if (!"ayah".equals(sabaq.optString("mode", "half_page"))) {
             LinearLayout pager = new LinearLayout(this);
             pager.addView(secondaryButton("− 1 halaman", () -> moveSabaqPage(-1)), new LinearLayout.LayoutParams(0, WRAP, 1f));
-            Button next = smallButton("+ 1 halaman");
             LinearLayout.LayoutParams nextParams = new LinearLayout.LayoutParams(0, WRAP, 1f);
             nextParams.leftMargin = dp(8);
-            pager.addView(next, nextParams);
-            next.setOnClickListener(view -> moveSabaqPage(1));
+            pager.addView(secondaryButton("+ 1 halaman", () -> moveSabaqPage(1)), nextParams);
             target.addView(pager);
             addGap(target, 6);
         }
@@ -1493,7 +1533,7 @@ public final class NativeMainActivity extends Activity {
             target.addView(secondaryButton("Atur rentang halaman", this::showSabaqRangeDialog));
         }
         addGap(target, 6);
-        JSONObject sabaqForSundaySetting = sabaq;
+        final JSONObject sabaqForSundaySetting = sabaq;
         Switch sundayNew = editorSwitch("Izinkan Sabaq baru pada hari Minggu",
                 sabaq.optBoolean("sundayNewSabaq", false));
         sundayNew.setOnCheckedChangeListener((button, checked) -> {
@@ -1506,21 +1546,11 @@ public final class NativeMainActivity extends Activity {
         addGap(target, 6);
         target.addView(text("Progres unit maju setelah evaluasi malam dinyatakan lulus.",
                 12, colorMuted(), false));
-        body.addView(target);
-        addGap(body, 16);
-        body.addView(secondaryButton(state.optBoolean("sabaqFrozen", false)
-                ? "Lanjutkan Sabaq" : "Hentikan Sabaq sementara", this::toggleSabaqFreeze));
-        JSONArray undo = state.optJSONArray("undoStack");
-        JSONObject latestUndo = undo == null || undo.length() == 0 ? null : undo.optJSONObject(undo.length() - 1);
-        if (isUndoableNativeAction(latestUndo)) {
-            addGap(body, 8);
-            body.addView(secondaryButton("Urungkan perubahan terakhir", this::undoGateDecision));
-        }
     }
 
     private void renderHifzReview(LinearLayout review) {
         review.removeAllViews();
-        TextView title = text("Daftar murajaah", 19, colorPrimary(), true);
+        TextView title = text("Daftar murajaah", 16, colorPrimary(), true);
         if (Build.VERSION.SDK_INT >= 28) title.setAccessibilityHeading(true);
         review.addView(title);
         addGap(review, 12);
@@ -1700,7 +1730,7 @@ public final class NativeMainActivity extends Activity {
             LinearLayout hero = card();
             GradientDrawable heroFill = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
                     new int[]{colorAccent(), darkTheme ? 0xFF2A3FB0 : 0xFF3B6CF8});
-            heroFill.setCornerRadius(dp(22));
+            heroFill.setCornerRadius(dp(16));
             hero.setBackground(heroFill);
             hero.setPadding(dp(20), dp(18), dp(20), dp(18));
             TextView kicker = text("SHALAT BERIKUTNYA", 11, withAlpha(Color.WHITE, 200), true);
@@ -1759,79 +1789,82 @@ public final class NativeMainActivity extends Activity {
         body.addView(timesCard);
         addGap(body, 12);
 
-        LinearLayout sourceCard = card();
-        addKicker(sourceCard, "LOKASI & METODE");
-        String[] sourceKeys = {"city", "gps", "manual"};
-        Spinner source = spinner(new String[]{"Pilih kota", "Lokasi GPS", "Isi waktu manual"});
-        source.setSelection(Math.max(0, indexOf(sourceKeys, selected)));
-        source.setOnItemSelectedListener(simpleItemListener(position -> {
-            if (sourceKeys[position].equals(state.optString("prayerSource"))) return;
-            if (position == 0) { showCityPicker(); return; }
-            stateSafePut("prayerSource", sourceKeys[position]);
-            persistState();
-            if (position == 1) requestCurrentLocation();
-            renderTab("prayer");
-        }));
-        sourceCard.addView(labeled("Sumber jadwal", source));
-        if ("city".equals(selected)) {
-            addGap(sourceCard, 10);
-            IndonesianCities.City city = PrayerReminders.city(state);
-            sourceCard.addView(labeled("Kota", secondaryButton(city == null ? "Pilih kota…" : city.name + "  ·  ubah",
-                    R.drawable.ic_location, this::showCityPicker)));
-        }
-        if ("city".equals(selected) || "gps".equals(selected)) {
-            addGap(sourceCard, 10);
-            Spinner method = spinner(PRAYER_METHOD_LABELS);
-            method.setSelection(indexOf(PRAYER_METHOD_KEYS, state.optString("gpsMethod", "kemenag")));
-            method.setOnItemSelectedListener(simpleItemListener(position -> {
-                stateSafePut("gpsMethod", PRAYER_METHOD_KEYS[position]);
+        String[] sourceNames = {"Kota", "GPS", "Manual"};
+        String[] sourceKeyOrder = {"city", "gps", "manual"};
+        IndonesianCities.City sourceCity = PrayerReminders.city(state);
+        String sourceSummary = "city".equals(selected) && sourceCity != null ? sourceCity.name
+                : sourceNames[Math.max(0, indexOf(sourceKeyOrder, selected))];
+        body.addView(collapsible("prayer_source", "Lokasi & metode", sourceSummary, sourceCard -> {
+            String[] sourceKeys = {"city", "gps", "manual"};
+            Spinner source = spinner(new String[]{"Pilih kota", "Lokasi GPS", "Isi waktu manual"});
+            source.setSelection(Math.max(0, indexOf(sourceKeys, selected)));
+            source.setOnItemSelectedListener(simpleItemListener(position -> {
+                if (sourceKeys[position].equals(state.optString("prayerSource"))) return;
+                if (position == 0) { showCityPicker(); return; }
+                stateSafePut("prayerSource", sourceKeys[position]);
                 persistState();
+                if (position == 1) requestCurrentLocation();
                 renderTab("prayer");
             }));
-            sourceCard.addView(labeled("Metode perhitungan", method));
-        }
-        if ("gps".equals(selected)) {
-            addGap(sourceCard, 10);
-            JSONObject location = state.optJSONObject("gpsLocation");
-            sourceCard.addView(text((location == null ? "Lokasi belum ditentukan" : location.optString("label", "Lokasi perangkat"))
-                    + (location != null && location.has("lat") && location.has("lon")
-                    ? " · " + String.format(Locale.ROOT, "%.4f, %.4f", location.optDouble("lat"), location.optDouble("lon"))
-                    : " · koordinat belum tersedia"), 12, colorMuted(), false));
-            addGap(sourceCard, 8);
-            sourceCard.addView(secondaryButton("Perbarui lokasi", R.drawable.ic_location, this::requestCurrentLocation));
-            addGap(sourceCard, 8);
-            EditText latitude = input(location == null || !location.has("lat") ? "" : String.valueOf(location.optDouble("lat")),
-                    "Contoh: -6.9175", InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
-            EditText longitude = input(location == null || !location.has("lon") ? "" : String.valueOf(location.optDouble("lon")),
-                    "Contoh: 107.6191", InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
-            sourceCard.addView(labeled("Lintang", latitude));
-            addGap(sourceCard, 6);
-            sourceCard.addView(labeled("Bujur", longitude));
-            addGap(sourceCard, 8);
-            sourceCard.addView(secondaryButton("Gunakan koordinat ini", () -> saveManualCoordinates(latitude, longitude)));
-        }
-        body.addView(sourceCard);
+            sourceCard.addView(labeled("Sumber jadwal", source));
+            if ("city".equals(selected)) {
+                addGap(sourceCard, 10);
+                IndonesianCities.City city = PrayerReminders.city(state);
+                sourceCard.addView(labeled("Kota", secondaryButton(city == null ? "Pilih kota…" : city.name + "  ·  ubah",
+                        R.drawable.ic_location, this::showCityPicker)));
+            }
+            if ("city".equals(selected) || "gps".equals(selected)) {
+                addGap(sourceCard, 10);
+                Spinner method = spinner(PRAYER_METHOD_LABELS);
+                method.setSelection(indexOf(PRAYER_METHOD_KEYS, state.optString("gpsMethod", "kemenag")));
+                method.setOnItemSelectedListener(simpleItemListener(position -> {
+                    stateSafePut("gpsMethod", PRAYER_METHOD_KEYS[position]);
+                    persistState();
+                    renderTab("prayer");
+                }));
+                sourceCard.addView(labeled("Metode perhitungan", method));
+            }
+            if ("gps".equals(selected)) {
+                addGap(sourceCard, 10);
+                JSONObject location = state.optJSONObject("gpsLocation");
+                sourceCard.addView(text((location == null ? "Lokasi belum ditentukan" : location.optString("label", "Lokasi perangkat"))
+                        + (location != null && location.has("lat") && location.has("lon")
+                        ? " · " + String.format(Locale.ROOT, "%.4f, %.4f", location.optDouble("lat"), location.optDouble("lon"))
+                        : " · koordinat belum tersedia"), 12, colorMuted(), false));
+                addGap(sourceCard, 8);
+                sourceCard.addView(secondaryButton("Perbarui lokasi", R.drawable.ic_location, this::requestCurrentLocation));
+                addGap(sourceCard, 8);
+                EditText latitude = input(location == null || !location.has("lat") ? "" : String.valueOf(location.optDouble("lat")),
+                        "Contoh: -6.9175", InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
+                EditText longitude = input(location == null || !location.has("lon") ? "" : String.valueOf(location.optDouble("lon")),
+                        "Contoh: 107.6191", InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
+                sourceCard.addView(labeled("Lintang", latitude));
+                addGap(sourceCard, 6);
+                sourceCard.addView(labeled("Bujur", longitude));
+                addGap(sourceCard, 8);
+                sourceCard.addView(secondaryButton("Gunakan koordinat ini", () -> saveManualCoordinates(latitude, longitude)));
+            }
+        }));
         addGap(body, 12);
 
         renderAdzanCard(ready);
         addGap(body, 12);
 
-        LinearLayout offsetCard = card();
-        EditText offsetField = input(String.valueOf(state.optInt("subuhOffsetMins", 15)), "15", InputType.TYPE_CLASS_NUMBER);
-        offsetField.setOnFocusChangeListener((view, focused) -> {
-            if (!focused) {
-                int minutes = parseInt(offsetField.getText().toString(), -1);
-                if (minutes < 0 || minutes > 240) { toast("Jeda Subuh harus 0–240 menit."); return; }
-                stateSafePut("subuhOffsetMins", minutes);
-                persistState();
-            }
-        });
-        offsetCard.addView(labeled("Mulai hafalan setelah Subuh (menit)", offsetField));
-        body.addView(offsetCard);
-        addGap(body, 10);
-        body.addView(text("Dihitung di perangkat dengan kriteria Kemenag RI (Subuh 20°, Isya 18°, Ashar Syafi'i) ditambah "
-                + "ihtiyath dan koreksi ketinggian; hasil dibulatkan ke atas sehingga tidak lebih awal dari jadwal resmi. "
-                + "Bisa berbeda 1–2 menit dari jadwal Kemenag daerahmu.", 12, colorMuted(), false));
+        body.addView(collapsible("prayer_more", "Lainnya", "Jeda hafalan setelah Subuh · metode hitung", offsetCard -> {
+            EditText offsetField = input(String.valueOf(state.optInt("subuhOffsetMins", 15)), "15", InputType.TYPE_CLASS_NUMBER);
+            offsetField.setOnFocusChangeListener((view, focused) -> {
+                if (!focused) {
+                    int minutes = parseInt(offsetField.getText().toString(), -1);
+                    if (minutes < 0 || minutes > 240) { toast("Jeda Subuh harus 0–240 menit."); return; }
+                    stateSafePut("subuhOffsetMins", minutes);
+                    persistState();
+                }
+            });
+            offsetCard.addView(labeled("Mulai hafalan setelah Subuh (menit)", offsetField));
+            offsetCard.addView(text("Dihitung di perangkat dengan kriteria Kemenag RI (Subuh 20°, Isya 18°, Ashar Syafi'i) ditambah "
+                    + "ihtiyath dan koreksi ketinggian; hasil dibulatkan ke atas sehingga tidak lebih awal dari jadwal resmi. "
+                    + "Bisa berbeda 1–2 menit dari jadwal Kemenag daerahmu.", 12, colorMuted(), false));
+        }));
     }
 
     private void addPrayerRow(LinearLayout parent, String key, String label, String time, boolean next, boolean past, boolean ready) {
@@ -1916,12 +1949,13 @@ public final class NativeMainActivity extends Activity {
     }
 
     private void renderAdzanCard(boolean ready) {
+        boolean enabled = PrayerReminders.enabled(this);
         LinearLayout reminder = card();
-        addKicker(reminder, "PENGINGAT ADZAN");
-        Switch master = editorSwitch("Ingatkan saat masuk waktu shalat", PrayerReminders.enabled(this));
+        Switch master = editorSwitch("Pengingat adzan", enabled);
+        master.setTextSize(15);
+        master.setTypeface(semiboldTypeface());
         reminder.addView(master);
-        if (PrayerReminders.enabled(this)) {
-            addGap(reminder, 8);
+        if (enabled) {
             String[] modes = {PrayerReminders.MODE_ADZAN, PrayerReminders.MODE_ALARM, PrayerReminders.MODE_NOTIFICATION};
             Spinner mode = spinner(new String[]{"Suara adzan", "Nada alarm (berulang sampai dimatikan)", "Notifikasi biasa (sekali bunyi)"});
             mode.setSelection(Math.max(0, indexOf(modes, PrayerReminders.mode(this))));
@@ -1929,61 +1963,23 @@ public final class NativeMainActivity extends Activity {
                 PrayerReminders.prefs(this).edit().putString("adzan_mode", modes[position]).apply();
                 renderTab("prayer");
             }));
-            reminder.addView(labeled("Suara saat masuk waktu", mode));
-            addGap(reminder, 8);
-            if (PrayerReminders.MODE_ADZAN.equals(PrayerReminders.mode(this))) {
-                String general = PrayerReminders.prefs(this).getString("adzan_uri", null);
-                String subuh = PrayerReminders.prefs(this).getString("adzan_uri_subuh", null);
-                reminder.addView(text("Adzan: " + (general == null ? "Adzan Mekkah (bawaan)" : audioName(general))
-                        + "\nAdzan Subuh: " + (subuh != null ? audioName(subuh) : general == null ? "Adzan Mekkah (bawaan)" : audioName(general)),
-                        13, colorSecondary(), false));
-                addGap(reminder, 8);
-                reminder.addView(secondaryButton(general == null ? "Ganti dengan file adzan lain" : "Ganti suara adzan",
-                        R.drawable.ic_headphones, () -> pickAdzanFile(REQUEST_ADZAN_FILE)));
-                addGap(reminder, 6);
-                reminder.addView(secondaryButton(subuh == null ? "Suara khusus Subuh (opsional)" : "Ganti suara Subuh",
-                        () -> pickAdzanFile(REQUEST_ADZAN_FILE_SUBUH)));
-                if (general != null || subuh != null) {
-                    addGap(reminder, 6);
-                    reminder.addView(secondaryButton("Kembali ke Adzan Mekkah bawaan", () -> {
-                        PrayerReminders.prefs(this).edit().remove("adzan_uri").remove("adzan_uri_subuh").apply();
-                        renderTab("prayer");
-                    }));
-                }
-            } else if (PrayerReminders.MODE_NOTIFICATION.equals(PrayerReminders.mode(this))) {
-                reminder.addView(text("Notifikasi biasa mengikuti nada dan mode senyap HP.", 12, colorMuted(), false));
-            }
-            reminder.addView(text("Adzan dan nada alarm memakai volume alarm, jadi tetap berbunyi saat HP disenyapkan. "
-                    + "Hentikan dengan tombol Matikan di notifikasi.", 12, colorMuted(), false));
-            addGap(reminder, 10);
+            reminder.addView(labeled("Bunyi saat masuk waktu", mode));
             if (!ready) {
-                reminder.addView(text("Pengingat aktif setelah kota atau lokasi GPS dipilih.", 13, colorSecondary(), false));
+                reminder.addView(text("Aktif setelah kota atau lokasi GPS dipilih.", 13, colorSecondary(), false));
             } else {
                 reminder.addView(text(PrayerReminders.describe(PrayerReminders.schedule(this))
-                        + "\nKetuk ikon lonceng di daftar waktu untuk menyalakan atau mematikan per waktu.", 13, colorSecondary(), false));
+                        + "\nKetuk lonceng di daftar waktu untuk mengatur per waktu shalat.", 12, colorMuted(), false));
             }
             boolean notificationsAllowed = Build.VERSION.SDK_INT < 33
                     || checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
             if (!notificationsAllowed) {
-                addGap(reminder, 8);
-                reminder.addView(text("Izin notifikasi belum diberikan, jadi pengingat tidak bisa tampil.", 12, colorMuted(), false));
-                addGap(reminder, 6);
+                reminder.addView(text("Izin notifikasi belum diberikan, jadi pengingat tidak bisa tampil.", 13, colorSecondary(), false));
                 reminder.addView(actionButton("Izinkan notifikasi", () -> requestPermissions(
                         new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_ADZAN_NOTIFICATION)));
             } else if (!PrayerReminders.canScheduleExact(this)) {
-                addGap(reminder, 8);
-                reminder.addView(text("Agar tepat waktu, izinkan \"Alarm & pengingat\". Tanpa izin ini pengingat bisa terlambat beberapa menit.",
-                        12, colorMuted(), false));
-                addGap(reminder, 6);
+                reminder.addView(text("Izinkan \"Alarm & pengingat\" agar tepat waktu; tanpa izin ini bisa terlambat beberapa menit.",
+                        13, colorSecondary(), false));
                 reminder.addView(actionButton("Izinkan alarm tepat waktu", this::openExactAlarmSettings));
-            }
-            if (notificationsAllowed && ready) {
-                addGap(reminder, 8);
-                reminder.addView(secondaryButton("Coba bunyi pengingat (contoh)", () -> {
-                    if (!PrayerReminders.notifyTest(this)) toast("Notifikasi belum diizinkan.");
-                }));
-                addGap(reminder, 6);
-                reminder.addView(secondaryButton("Hentikan suara", () -> AdzanPlayerService.stop(this)));
             }
         }
         master.setOnCheckedChangeListener((button, checked) -> {
@@ -1996,6 +1992,50 @@ public final class NativeMainActivity extends Activity {
             renderTab("prayer");
         });
         body.addView(reminder);
+        if (!enabled) return;
+
+        boolean adzanMode = PrayerReminders.MODE_ADZAN.equals(PrayerReminders.mode(this));
+        String general = PrayerReminders.prefs(this).getString("adzan_uri", null);
+        String subuh = PrayerReminders.prefs(this).getString("adzan_uri_subuh", null);
+        String soundSummary = adzanMode ? (general == null ? "Adzan Mekkah (bawaan)" : audioName(general)) : "Uji coba bunyi";
+        addGap(body, 12);
+        body.addView(collapsible("prayer_sound", adzanMode ? "Suara adzan & uji coba" : "Uji coba bunyi", soundSummary, panel -> {
+            if (adzanMode) {
+                panel.addView(text("Adzan: " + (general == null ? "Adzan Mekkah (bawaan)" : audioName(general))
+                        + "\nAdzan Subuh: " + (subuh != null ? audioName(subuh) : general == null ? "Adzan Mekkah (bawaan)" : audioName(general)),
+                        13, colorSecondary(), false));
+                panel.addView(secondaryButton(general == null ? "Ganti dengan file adzan lain" : "Ganti suara adzan",
+                        R.drawable.ic_headphones, () -> pickAdzanFile(REQUEST_ADZAN_FILE)));
+                panel.addView(secondaryButton(subuh == null ? "Suara khusus Subuh (opsional)" : "Ganti suara Subuh",
+                        () -> pickAdzanFile(REQUEST_ADZAN_FILE_SUBUH)));
+                if (general != null || subuh != null) {
+                    panel.addView(secondaryButton("Kembali ke Adzan Mekkah bawaan", () -> {
+                        PrayerReminders.prefs(this).edit().remove("adzan_uri").remove("adzan_uri_subuh").apply();
+                        renderTab("prayer");
+                    }));
+                }
+            } else if (PrayerReminders.MODE_NOTIFICATION.equals(PrayerReminders.mode(this))) {
+                panel.addView(text("Notifikasi biasa mengikuti nada dan mode senyap HP.", 12, colorMuted(), false));
+            }
+            if (!PrayerReminders.MODE_NOTIFICATION.equals(PrayerReminders.mode(this))) {
+                panel.addView(text("Adzan dan nada alarm memakai volume alarm, jadi tetap berbunyi saat HP disenyapkan. "
+                        + "Hentikan dengan tombol Matikan di notifikasi.", 12, colorMuted(), false));
+            }
+            boolean notificationsAllowed = Build.VERSION.SDK_INT < 33
+                    || checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
+            if (notificationsAllowed && ready) {
+                LinearLayout tests = new LinearLayout(this);
+                tests.addView(secondaryButton("Coba bunyi", R.drawable.ic_play, () -> {
+                    if (!PrayerReminders.notifyTest(this)) toast("Notifikasi belum diizinkan.");
+                }), new LinearLayout.LayoutParams(0, WRAP, 1f));
+                LinearLayout.LayoutParams stopParams = new LinearLayout.LayoutParams(0, WRAP, 1f);
+                stopParams.leftMargin = dp(8);
+                tests.addView(secondaryButton("Hentikan", R.drawable.ic_pause, () -> AdzanPlayerService.stop(this)), stopParams);
+                panel.addView(tests);
+            } else {
+                panel.addView(text("Uji coba tersedia setelah lokasi dipilih dan notifikasi diizinkan.", 12, colorMuted(), false));
+            }
+        }));
     }
 
     private void pickAdzanFile(int requestCode) {
@@ -2023,10 +2063,10 @@ public final class NativeMainActivity extends Activity {
     }
 
     private void renderSystem() {
-        renderPageHeading("Setelan", "Tampilan, notifikasi, dan cadangan perangkat.");
+        renderPageHeading("Setelan", "Tampilan, notifikasi, dan data");
 
         LinearLayout appearance = card();
-        appearance.addView(text("Tampilan dan gerakan", 19, colorPrimary(), true));
+        addKicker(appearance, "TAMPILAN");
         Spinner theme = spinner(new String[]{"Ikuti perangkat", "Terang", "Gelap"});
         String themeValue = state.optString("themePreference", "system");
         theme.setSelection("light".equals(themeValue) ? 1 : ("dark".equals(themeValue) ? 2 : 0));
@@ -2047,21 +2087,23 @@ public final class NativeMainActivity extends Activity {
             rebuildAppearance();
         }));
         appearance.addView(labeled("Gaya panel dan navigasi", surface));
-        appearance.addView(text(Build.VERSION.SDK_INT >= 31
-                ? "Blur dan Glass mengaburkan isi di belakang bilah navigasi."
-                : "Blur sistem tersedia mulai Android 12. Di perangkat ini panel memakai efek transparan.",
-                13, colorSecondary(), false));
+        if (Build.VERSION.SDK_INT < 31) appearance.addView(text(
+                "Blur tersedia mulai Android 12; di perangkat ini memakai efek transparan.", 12, colorMuted(), false));
         Switch motion = editorSwitch("Animasi antarlayar", surfacePrefs().getBoolean("motion_enabled", true));
         motion.setOnCheckedChangeListener((button, checked) -> surfacePrefs().edit().putBoolean("motion_enabled", checked).apply());
         appearance.addView(motion);
         body.addView(appearance);
-        addGap(body, 16);
+        addGap(body, 12);
 
         LinearLayout surfaces = card();
-        addKicker(surfaces, "TAMPILAN ANDROID");
+        addKicker(surfaces, "NOTIFIKASI & WIDGET");
         Switch notification = new Switch(this);
         notification.setText(R.string.native_notification_setting);
         notification.setTextColor(colorPrimary());
+        notification.setTextSize(14);
+        notification.setTypeface(appTypeface());
+        notification.setMinHeight(dp(48));
+        styleSwitch(notification);
         boolean notificationPermissionGranted = Build.VERSION.SDK_INT < 33
                 || checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
         notification.setChecked(surfacePrefs().getBoolean("notification_enabled", true)
@@ -2071,16 +2113,14 @@ public final class NativeMainActivity extends Activity {
         Switch widget = new Switch(this);
         widget.setText(R.string.native_widget_setting);
         widget.setTextColor(colorPrimary());
+        widget.setTextSize(14);
+        widget.setTypeface(appTypeface());
+        widget.setMinHeight(dp(48));
+        styleSwitch(widget);
         widget.setChecked(surfacePrefs().getBoolean("widget_enabled", false));
         widget.setOnCheckedChangeListener((button, checked) -> setWidgetEnabled(checked));
         surfaces.addView(widget);
-        surfaces.addView(secondaryButton("Tambahkan widget", this::requestWidgetPin));
-        surfaces.addView(secondaryButton("Setelan notifikasi", this::openNotificationSettings));
-        body.addView(surfaces);
-        addGap(body, 16);
-
-        LinearLayout timerAlarm = card();
-        addKicker(timerAlarm, "ALARM SELESAI TIMER");
+        LinearLayout timerAlarm = surfaces;
         Switch alarmEnabled = editorSwitch("Bunyikan alarm saat timer selesai",
                 state.optBoolean("timerAlarmEnabled", true));
         alarmEnabled.setOnCheckedChangeListener((button, checked) -> {
@@ -2088,47 +2128,52 @@ public final class NativeMainActivity extends Activity {
             persistState();
         });
         timerAlarm.addView(alarmEnabled);
-        timerAlarm.addView(secondaryButton("Tes suara jam", () -> {
+        LinearLayout surfaceButtons = new LinearLayout(this);
+        surfaceButtons.addView(secondaryButton("Tambah widget", this::requestWidgetPin), new LinearLayout.LayoutParams(0, WRAP, 1f));
+        LinearLayout.LayoutParams chimeParams = new LinearLayout.LayoutParams(0, WRAP, 1f);
+        chimeParams.leftMargin = dp(8);
+        surfaceButtons.addView(secondaryButton("Tes suara timer", () -> {
             playTimerClockChime(true);
             toast("Lonceng jam diputar.");
-        }));
-        body.addView(timerAlarm);
-        addGap(body, 16);
+        }), chimeParams);
+        surfaces.addView(surfaceButtons);
+        surfaces.addView(secondaryButton("Setelan notifikasi Android", this::openNotificationSettings));
+        body.addView(surfaces);
+        addGap(body, 12);
 
         LinearLayout backup = card();
-        addKicker(backup, "DATA OFFLINE");
-        backup.addView(text("Data tersimpan di perangkat. Impor cadangan v10 dari versi sebelumnya untuk memindahkan profil, progres hafalan, dan waktu shalat.",
+        addKicker(backup, "DATA");
+        backup.addView(text("Semua data tersimpan di perangkat. Gunakan cadangan JSON untuk memindahkan data.",
                 13, colorSecondary(), false));
-        addGap(backup, 8);
-        backup.addView(actionButton("Impor cadangan JSON", R.drawable.ic_upload, this::beginImport));
-        addGap(backup, 6);
-        backup.addView(secondaryButton("Ekspor cadangan JSON", R.drawable.ic_download, this::beginExport));
-        addGap(backup, 6);
+        LinearLayout backupButtons = new LinearLayout(this);
+        backupButtons.addView(secondaryButton("Ekspor", R.drawable.ic_download, this::beginExport), new LinearLayout.LayoutParams(0, WRAP, 1f));
+        LinearLayout.LayoutParams importParams = new LinearLayout.LayoutParams(0, WRAP, 1f);
+        importParams.leftMargin = dp(8);
+        backupButtons.addView(secondaryButton("Impor", R.drawable.ic_upload, this::beginImport), importParams);
+        backup.addView(backupButtons);
         backup.addView(secondaryButton("Reset aktivitas hari ini", this::confirmResetToday));
         body.addView(backup);
-        addGap(body, 16);
-        body.addView(secondaryButton("Setelan tanggal dan waktu", () -> {
-            try { startActivity(new Intent(Settings.ACTION_DATE_SETTINGS)); }
-            catch (Exception exception) { startActivity(new Intent(Settings.ACTION_SETTINGS)); }
+        addGap(body, 12);
+
+        body.addView(collapsible("system_more", "Lainnya", "Tanggal & waktu · sumber & lisensi", credits -> {
+            credits.addView(secondaryButton("Setelan tanggal dan waktu", () -> {
+                try { startActivity(new Intent(Settings.ACTION_DATE_SETTINGS)); }
+                catch (Exception exception) { startActivity(new Intent(Settings.ACTION_SETTINGS)); }
+            }));
+            addKicker(credits, "SUMBER & LISENSI");
+            credits.addView(text("Teks Al-Qur'an: Tanzil Project (Uthmani v1.1, CC BY 3.0), disalin tanpa perubahan.", 13, colorSecondary(), false));
+            credits.addView(sourceLabel("tanzil.net", "https://tanzil.net/"));
+            credits.addView(text("Nama surah: transliterasi Kementerian Agama RI. Terjemahan Indonesia: EQuran.id (Kemenag RI).", 13, colorSecondary(), false));
+            credits.addView(sourceLabel("equran.id", "https://equran.id/"));
+            credits.addView(text("Murattal dan waktu ayat: MP3Quran.net (Yasser Al-Dosari, Mishary Alafasy).", 13, colorSecondary(), false));
+            credits.addView(sourceLabel("mp3quran.net", "https://mp3quran.net/"));
+            credits.addView(text("Suara adzan bawaan: rekaman adzan Masjidil Haram, Makkah, dari islamiques.net. Hak cipta tetap milik "
+                    + "pemegang hak; sumber tidak mencantumkan lisensi. Pemegang hak yang keberatan dapat menghubungi "
+                    + "depupdev@gmail.com agar rekaman dihapus atau diganti.", 13, colorSecondary(), false));
+            credits.addView(sourceLabel("islamiques.net", "https://islamiques.net/"));
+            credits.addView(text("Jadwal shalat dihitung di perangkat dengan kriteria Kemenag RI. Huruf: Amiri Quran dan Inter "
+                    + "(SIL Open Font License 1.1).", 13, colorSecondary(), false));
         }));
-
-        addGap(body, 16);
-
-        LinearLayout credits = card();
-        addKicker(credits, "SUMBER & LISENSI");
-        credits.addView(text("Teks Al-Qur'an: Tanzil Project (Uthmani v1.1, CC BY 3.0), disalin tanpa perubahan.", 13, colorSecondary(), false));
-        credits.addView(sourceLabel("tanzil.net", "https://tanzil.net/"));
-        credits.addView(text("Nama surah: transliterasi Kementerian Agama RI. Terjemahan Indonesia: EQuran.id (Kemenag RI).", 13, colorSecondary(), false));
-        credits.addView(sourceLabel("equran.id", "https://equran.id/"));
-        credits.addView(text("Murattal dan waktu ayat: MP3Quran.net (Yasser Al-Dosari, Mishary Alafasy).", 13, colorSecondary(), false));
-        credits.addView(sourceLabel("mp3quran.net", "https://mp3quran.net/"));
-        credits.addView(text("Suara adzan bawaan: rekaman adzan Masjidil Haram, Makkah, dari islamiques.net. Hak cipta tetap milik "
-                + "pemegang hak; sumber tidak mencantumkan lisensi. Pemegang hak yang keberatan dapat menghubungi "
-                + "depupdev@gmail.com agar rekaman dihapus atau diganti.", 13, colorSecondary(), false));
-        credits.addView(sourceLabel("islamiques.net", "https://islamiques.net/"));
-        credits.addView(text("Jadwal shalat dihitung di perangkat dengan kriteria Kemenag RI. Huruf: Amiri Quran dan Inter "
-                + "(SIL Open Font License 1.1).", 13, colorSecondary(), false));
-        body.addView(credits);
     }
 
     private void confirmResetToday() {
@@ -2305,12 +2350,12 @@ public final class NativeMainActivity extends Activity {
     }
 
     private void renderPageHeading(String title, String subtitle) {
-        TextView heading = text(title, 27, colorPrimary(), true);
+        TextView heading = text(title, 24, colorPrimary(), true);
         if (Build.VERSION.SDK_INT >= 28) heading.setAccessibilityHeading(true);
         body.addView(heading);
-        addGap(body, 6);
-        body.addView(text(subtitle, 14, colorSecondary(), false));
-        addGap(body, 16);
+        addGap(body, 4);
+        body.addView(text(subtitle, 13, colorMuted(), false));
+        addGap(body, 14);
     }
 
     private void renderQuranIndex() {
@@ -2967,7 +3012,7 @@ public final class NativeMainActivity extends Activity {
                 .setNegativeButton("Tutup", null).show();
     }
 
-    private void addProfilePicker() {
+    private void addProfilePicker(LinearLayout parent) {
         LinearLayout row = new LinearLayout(this);
         for (int i = 1; i <= 3; i++) {
             final int profileIndex = i;
@@ -2982,7 +3027,7 @@ public final class NativeMainActivity extends Activity {
             if (i > 1) params.leftMargin = dp(6);
             row.addView(button, params);
         }
-        body.addView(row);
+        parent.addView(row);
     }
 
     private void selectProfile(int index) {
@@ -4370,20 +4415,20 @@ public final class NativeMainActivity extends Activity {
     private LinearLayout card() {
         LinearLayout view = new CardLayout(this);
         view.setOrientation(LinearLayout.VERTICAL);
-        view.setPadding(dp(18), dp(16), dp(18), dp(16));
+        view.setPadding(dp(16), dp(14), dp(16), dp(14));
         String surface = surfaceStyle();
         if ("glass".equals(surface)) {
             GradientDrawable glass = new GradientDrawable(GradientDrawable.Orientation.TL_BR, new int[]{
                     withAlpha(darkTheme ? 0xFF2B3346 : Color.WHITE, darkTheme ? 190 : 215),
                     withAlpha(colorSurface(), darkTheme ? 140 : 165)});
-            glass.setCornerRadius(dp(20));
+            glass.setCornerRadius(dp(16));
             glass.setStroke(dp(1), withAlpha(Color.WHITE, darkTheme ? 30 : 190));
             view.setBackground(glass);
             return view;
         }
         int fill = "transparent".equals(surface) || "blur".equals(surface)
                 ? withAlpha(colorSurface(), darkTheme ? 200 : 215) : colorSurface();
-        view.setBackground(rounded(fill, colorBorder(), dp(20), dp(1)));
+        view.setBackground(rounded(fill, colorBorder(), dp(16), dp(1)));
         return view;
     }
 
@@ -4720,6 +4765,55 @@ public final class NativeMainActivity extends Activity {
         addGap(group, 6);
         group.addView(control);
         return group;
+    }
+
+    private interface SectionContent { void fill(LinearLayout panel); }
+
+    /** Kartu yang bisa dibuka-tutup; status buka diingat selama aplikasi berjalan. */
+    private LinearLayout collapsible(String key, String title, String summary, SectionContent content) {
+        LinearLayout section = card();
+        section.setPadding(dp(16), dp(4), dp(16), dp(4));
+        LinearLayout header = new LinearLayout(this);
+        header.setGravity(Gravity.CENTER_VERTICAL);
+        header.setMinimumHeight(dp(52));
+        header.setClickable(true);
+        header.setFocusable(true);
+        header.setBackground(rippleShape(dp(12)));
+        LinearLayout labels = new LinearLayout(this);
+        labels.setOrientation(LinearLayout.VERTICAL);
+        labels.addView(text(title, 15, colorPrimary(), true));
+        if (summary != null && !summary.isEmpty()) {
+            TextView hint = text(summary, 12, colorMuted(), false);
+            hint.setPadding(0, dp(3), 0, 0);
+            hint.setSingleLine(true);
+            hint.setEllipsize(TextUtils.TruncateAt.END);
+            labels.addView(hint);
+        }
+        header.addView(labels, new LinearLayout.LayoutParams(0, WRAP, 1f));
+        ImageView chevron = new ImageView(this);
+        chevron.setImageResource(R.drawable.ic_chevron_down);
+        chevron.setColorFilter(colorMuted());
+        chevron.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        header.addView(chevron, new LinearLayout.LayoutParams(dp(18), dp(18)));
+        section.addView(header, new LinearLayout.LayoutParams(MATCH, WRAP));
+        LinearLayout panel = new CardLayout(this);
+        panel.setOrientation(LinearLayout.VERTICAL);
+        panel.setPadding(0, 0, 0, dp(12));
+        section.addView(panel, new LinearLayout.LayoutParams(MATCH, WRAP));
+        Runnable sync = () -> {
+            boolean open = openSections.contains(key);
+            chevron.setRotation(open ? 180f : 0f);
+            panel.removeAllViews();
+            if (open) content.fill(panel);
+            panel.setVisibility(open ? View.VISIBLE : View.GONE);
+            header.setContentDescription(title + (open ? ", terbuka" : ", tertutup"));
+        };
+        header.setOnClickListener(view -> {
+            if (!openSections.remove(key)) openSections.add(key);
+            sync.run();
+        });
+        sync.run();
+        return section;
     }
 
     private void addGap(LinearLayout parent, int sizeDp) {
