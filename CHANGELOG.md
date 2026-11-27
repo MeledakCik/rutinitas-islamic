@@ -3,6 +3,11 @@
 Semua perubahan penting pada aplikasi Rutinitas dicatat di sini.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/), dan penomoran versi mengikuti [Semantic Versioning](https://semver.org/lang/id/).
 
+## [1.3.1]
+
+### Diperbaiki
+- **Widget Waktu Shalat** lebih rapi: jadwal lima waktu tampil sebagai tabel, tidak lagi terpotong. Widget yang tinggi menampilkan jadwal ke bawah, widget yang pendek memakai lima kolom. Shalat berikutnya disorot dan waktu yang sudah lewat diredupkan. Setelah Isya, tabel menampilkan jadwal besok.
+
 ## [1.3.0]
 
 ### Ditambahkan
