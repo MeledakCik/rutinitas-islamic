@@ -3,6 +3,12 @@
 Semua perubahan penting pada aplikasi Rutinitas dicatat di sini.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/), dan penomoran versi mengikuti [Semantic Versioning](https://semver.org/lang/id/).
 
+## [1.4.0]
+
+### Diubah
+- **Navigasi bawah** kini berisi lima menu: Beranda, Jadwal, Hafalan, Shalat, dan Qur'an. Semua menu jadi lebih lega.
+- **Setelan** dibuka lewat ikon roda gigi di pojok kanan atas, di sebelah jam. Ikon ini ada di semua halaman.
+
 ## [1.3.3]
 
 ### Diperbaiki

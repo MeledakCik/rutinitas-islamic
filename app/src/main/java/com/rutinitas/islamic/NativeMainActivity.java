@@ -113,6 +113,9 @@ public final class NativeMainActivity extends Activity {
             R.drawable.ic_dock_home, R.drawable.ic_dock_schedule, R.drawable.ic_dock_hifz,
             R.drawable.ic_dock_prayer, R.drawable.ic_dock_quran, R.drawable.ic_dock_settings
     };
+    // Only the first five tabs live in the bottom dock (Material: 3-5 destinations).
+    // "system" (Setelan) opens from the gear button in the header instead.
+    private static final int NAV_DOCK_COUNT = 5;
     private static final String[] PRAYER_KEYS = {"subuh", "dzuhur", "ashar", "maghrib", "isya"};
     private static final String[] PRAYER_LABELS = {"Subuh", "Dzuhur", "Ashar", "Maghrib", "Isya"};
     private static final String[] PRAYER_METHOD_KEYS = {"kemenag", "mwl", "isna", "makkah", "egypt"};
@@ -164,6 +167,7 @@ public final class NativeMainActivity extends Activity {
     private int quranFontSize = 30;
     private boolean quranReading;
     private boolean dzikirOpen;
+    private ImageView settingsButton;
     private TextView dzikirCountView;
     private TextView dzikirTargetView;
     private TextView dzikirLatinView;
@@ -570,6 +574,19 @@ public final class NativeMainActivity extends Activity {
                 now.get(Calendar.MINUTE)), 16, colorPrimary(), true);
         clockView.setTypeface(monoTypeface(), Typeface.BOLD);
         header.addView(clockView, new LinearLayout.LayoutParams(WRAP, WRAP));
+        settingsButton = new ImageView(this);
+        settingsButton.setImageResource(R.drawable.ic_dock_settings);
+        settingsButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        settingsButton.setPadding(dp(12), dp(12), dp(12), dp(12));
+        settingsButton.setContentDescription("Setelan");
+        settingsButton.setFocusable(true);
+        settingsButton.setOnClickListener(view -> {
+            if (!"system".equals(currentTab)) renderTab("system");
+        });
+        pressScale(settingsButton);
+        LinearLayout.LayoutParams settingsParams = new LinearLayout.LayoutParams(dp(44), dp(44));
+        settingsParams.setMarginStart(dp(8));
+        header.addView(settingsButton, settingsParams);
         View divider = new View(this);
         divider.setBackgroundColor(colorBorder());
         LinearLayout.LayoutParams dividerParams = new LinearLayout.LayoutParams(MATCH, dp(1));
@@ -591,7 +608,7 @@ public final class NativeMainActivity extends Activity {
         motion.enableTransitionType(LayoutTransition.CHANGING);
         motion.setDuration(reducedMotion() ? 0 : 220);
         bar.setLayoutTransition(motion);
-        for (int i = 0; i < NAV_KEYS.length; i++) {
+        for (int i = 0; i < NAV_DOCK_COUNT; i++) {
             final String key = NAV_KEYS[i];
             final String label = NAV_LABELS[i];
             LinearLayout item = new LinearLayout(this);
@@ -667,7 +684,15 @@ public final class NativeMainActivity extends Activity {
     }
 
     private void updateNavigation() {
-        for (int i = 0; i < NAV_KEYS.length; i++) {
+        if (settingsButton != null) {
+            boolean onSettings = "system".equals(currentTab);
+            settingsButton.setSelected(onSettings);
+            settingsButton.setColorFilter(onSettings ? colorOnAccent() : colorMuted());
+            settingsButton.setBackground(onSettings
+                    ? rippleBackground(colorAccent(), colorAccent(), dp(22), 0)
+                    : rippleShape(dp(22)));
+        }
+        for (int i = 0; i < NAV_DOCK_COUNT; i++) {
             boolean selected = NAV_KEYS[i].equals(currentTab);
             View item = nav.getChildAt(i);
             item.setSelected(selected);
