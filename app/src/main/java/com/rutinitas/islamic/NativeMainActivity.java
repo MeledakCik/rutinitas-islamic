@@ -1521,6 +1521,13 @@ public final class NativeMainActivity extends Activity {
             target.addView(secondaryButton("Atur rentang ayat dan porsi harian", this::showAyahTargetDialog));
         }
         if (!"ayah".equals(sabaq.optString("mode", "half_page"))) {
+            LinearLayout dayPager = new LinearLayout(this);
+            dayPager.addView(secondaryButton("− 1 hari", () -> moveSabaqDay(-1)), new LinearLayout.LayoutParams(0, WRAP, 1f));
+            LinearLayout.LayoutParams nextDayParams = new LinearLayout.LayoutParams(0, WRAP, 1f);
+            nextDayParams.leftMargin = dp(8);
+            dayPager.addView(secondaryButton("+ 1 hari", () -> moveSabaqDay(1)), nextDayParams);
+            target.addView(dayPager);
+            addGap(target, 6);
             LinearLayout pager = new LinearLayout(this);
             pager.addView(secondaryButton("− 1 halaman", () -> moveSabaqPage(-1)), new LinearLayout.LayoutParams(0, WRAP, 1f));
             LinearLayout.LayoutParams nextParams = new LinearLayout.LayoutParams(0, WRAP, 1f);
@@ -3731,9 +3738,32 @@ public final class NativeMainActivity extends Activity {
         int current = sabaq.optInt("currentPage", first);
         int next = Math.max(first, Math.min(last, current + delta));
         if (next == current) return;
+        // Pindah halaman tetap di baris yang sama (mis. hal. 8 baris 13–15 → hal. 9 baris 13–15).
+        applySabaqPosition(sabaq, next, sabaq.optInt("subSlot", 0));
+    }
+
+    /** Geser posisi Sabaq sebanyak satu porsi harian (¼/½/1/beberapa halaman) maju atau mundur. */
+    private void moveSabaqDay(int delta) {
+        JSONObject sabaq = state.optJSONObject("sabaq");
+        if (sabaq == null) return;
+        String mode = sabaq.optString("mode", "half_page");
+        int slotsPerPage = "quarter_page".equals(mode) ? 4 : "half_page".equals(mode) ? 2 : 1;
+        int pagesPerStep = "multi_page".equals(mode) ? Math.max(1, sabaq.optInt("pagesPerDay", 2)) : 1;
+        int first = sabaq.optInt("rangeStartPage", 1);
+        int last = sabaq.optInt("rangeEndPage", 604);
+        int current = sabaq.optInt("currentPage", first);
+        int slot = slotsPerPage > 1 ? Math.max(0, Math.min(slotsPerPage - 1, sabaq.optInt("subSlot", 0))) : 0;
+        int position = slotsPerPage > 1 ? (current - first) * slotsPerPage + slot : (current - first);
+        int maxPosition = (last - first) * slotsPerPage + (slotsPerPage - 1);
+        int nextPosition = Math.max(0, Math.min(maxPosition, position + delta * (slotsPerPage > 1 ? 1 : pagesPerStep)));
+        if (nextPosition == position) return;
+        applySabaqPosition(sabaq, first + nextPosition / slotsPerPage, nextPosition % slotsPerPage);
+    }
+
+    private void applySabaqPosition(JSONObject sabaq, int page, int slot) {
         try {
-            sabaq.put("currentPage", next);
-            sabaq.put("subSlot", 0);
+            sabaq.put("currentPage", page);
+            sabaq.put("subSlot", slot);
             sabaq.put("sabaqCompleted", false);
             sabaq.put("targetCompleted", false);
             rebuildSabqiForSabaqEdit(sabaq);
