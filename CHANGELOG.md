@@ -3,6 +3,11 @@
 Semua perubahan penting pada aplikasi Rutinitas dicatat di sini.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/), dan penomoran versi mengikuti [Semantic Versioning](https://semver.org/lang/id/).
 
+## [1.3.2]
+
+### Diperbaiki
+- **Widget Waktu Shalat** kembali bisa dimuat. Versi 1.3.1 memakai elemen garis pemisah yang tidak didukung widget Android, sehingga launcher menampilkan pesan gagal memuat widget.
+
 ## [1.3.1]
 
 ### Diperbaiki
